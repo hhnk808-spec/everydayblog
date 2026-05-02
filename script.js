@@ -1,5 +1,6 @@
 const STORAGE_KEY = 'diary_entries_v2';
 const LEGACY_KEY = 'diary_entries';
+const PROFILE_KEY = 'profile_info';
 
 const dateInput = document.getElementById('dateInput');
 const entryInput = document.getElementById('entryInput');
@@ -19,6 +20,19 @@ const calLabel = document.getElementById('calLabel');
 const prevMonth = document.getElementById('prevMonth');
 const nextMonth = document.getElementById('nextMonth');
 
+// Profile elements
+const profilePhoto = document.getElementById('profilePhoto');
+const photoInput = document.getElementById('photoInput');
+const photoChangeBtn = document.getElementById('photoChangeBtn');
+const profileName = document.getElementById('profileName');
+const profileBio = document.getElementById('profileBio');
+const twitterLink = document.getElementById('twitterLink');
+const noteLink = document.getElementById('noteLink');
+const facebookLink = document.getElementById('facebookLink');
+const hpLink = document.getElementById('hpLink');
+const serviceLink = document.getElementById('serviceLink');
+const editProfileBtn = document.getElementById('editProfileBtn');
+
 let state = {
     entries: {},
     currentDate: todayStr(),
@@ -27,6 +41,17 @@ let state = {
     draftLiked: false,
     calendarMonth: new Date(),
     searchQuery: '',
+    profile: {
+        name: '',
+        bio: '',
+        photo: null,
+        twitter: '',
+        note: '',
+        facebook: '',
+        hp: '',
+        service: '',
+    },
+    editingProfile: false,
 };
 
 function todayStr() {
@@ -338,6 +363,169 @@ nextMonth.addEventListener('click', () => {
     renderCalendar();
 });
 
+/* ===== Profile Management ===== */
+function loadProfile() {
+    const raw = localStorage.getItem(PROFILE_KEY);
+    if (raw) {
+        state.profile = JSON.parse(raw);
+    }
+    renderProfile();
+}
+
+function saveProfile() {
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(state.profile));
+    state.editingProfile = false;
+    editProfileBtn.textContent = 'プロフィール編集';
+    profileName.readOnly = true;
+    profileBio.readOnly = true;
+    renderProfile();
+}
+
+function renderProfile() {
+    profileName.value = state.profile.name || '';
+    profileBio.value = state.profile.bio || '';
+
+    if (state.profile.photo) {
+        profilePhoto.src = state.profile.photo;
+    }
+
+    twitterLink.href = state.profile.twitter || '#';
+    twitterLink.style.opacity = state.profile.twitter ? '1' : '0.3';
+    twitterLink.style.pointerEvents = state.profile.twitter ? 'auto' : 'none';
+
+    noteLink.href = state.profile.note || '#';
+    noteLink.style.opacity = state.profile.note ? '1' : '0.3';
+    noteLink.style.pointerEvents = state.profile.note ? 'auto' : 'none';
+
+    facebookLink.href = state.profile.facebook || '#';
+    facebookLink.style.opacity = state.profile.facebook ? '1' : '0.3';
+    facebookLink.style.pointerEvents = state.profile.facebook ? 'auto' : 'none';
+
+    hpLink.href = state.profile.hp || '#';
+    hpLink.style.opacity = state.profile.hp ? '1' : '0.3';
+    hpLink.style.pointerEvents = state.profile.hp ? 'auto' : 'none';
+
+    serviceLink.href = state.profile.service || '#';
+    serviceLink.style.opacity = state.profile.service ? '1' : '0.3';
+    serviceLink.style.pointerEvents = state.profile.service ? 'auto' : 'none';
+}
+
+photoChangeBtn.addEventListener('click', () => {
+    photoInput.click();
+});
+
+photoInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            state.profile.photo = event.target.result;
+            profilePhoto.src = state.profile.photo;
+            if (state.editingProfile) {
+                saveProfile();
+            }
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+editProfileBtn.addEventListener('click', () => {
+    state.editingProfile = !state.editingProfile;
+
+    if (state.editingProfile) {
+        editProfileBtn.textContent = '保存';
+        profileName.readOnly = false;
+        profileBio.readOnly = false;
+        profileName.focus();
+    } else {
+        state.profile.name = profileName.value;
+        state.profile.bio = profileBio.value;
+        saveProfile();
+    }
+});
+
+profileName.addEventListener('blur', () => {
+    if (state.editingProfile) {
+        state.profile.name = profileName.value;
+    }
+});
+
+profileBio.addEventListener('blur', () => {
+    if (state.editingProfile) {
+        state.profile.bio = profileBio.value;
+    }
+});
+
+// Create a modal for editing SNS links
+const createProfileModal = () => {
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);display:none;z-index:1000;';
+    modal.id = 'profileModal';
+    modal.innerHTML = `
+        <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:30px;border-radius:10px;width:90%;max-width:400px;box-shadow:0 4px 6px rgba(0,0,0,0.1);">
+            <h3 style="margin-top:0;color:#2d5016;">SNSリンク編集</h3>
+            <div style="margin-bottom:15px;">
+                <label style="display:block;color:#558b2f;font-weight:500;margin-bottom:5px;">Twitter</label>
+                <input type="url" id="modalTwitter" placeholder="https://twitter.com/username" style="width:100%;padding:8px;border:1px solid #c8e6c9;border-radius:4px;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block;color:#558b2f;font-weight:500;margin-bottom:5px;">note</label>
+                <input type="url" id="modalNote" placeholder="https://note.com/username" style="width:100%;padding:8px;border:1px solid #c8e6c9;border-radius:4px;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block;color:#558b2f;font-weight:500;margin-bottom:5px;">Facebook</label>
+                <input type="url" id="modalFacebook" placeholder="https://facebook.com/username" style="width:100%;padding:8px;border:1px solid #c8e6c9;border-radius:4px;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block;color:#558b2f;font-weight:500;margin-bottom:5px;">HP</label>
+                <input type="url" id="modalHP" placeholder="https://example.com" style="width:100%;padding:8px;border:1px solid #c8e6c9;border-radius:4px;">
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="display:block;color:#558b2f;font-weight:500;margin-bottom:5px;">サービスサイト</label>
+                <input type="url" id="modalService" placeholder="https://service.com" style="width:100%;padding:8px;border:1px solid #c8e6c9;border-radius:4px;">
+            </div>
+            <div style="display:flex;gap:10px;margin-top:20px;">
+                <button id="modalSave" style="flex:1;background:#66bb6a;color:white;border:none;padding:10px;border-radius:4px;cursor:pointer;">保存</button>
+                <button id="modalCancel" style="flex:1;background:#999;color:white;border:none;padding:10px;border-radius:4px;cursor:pointer;">キャンセル</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+
+    document.getElementById('modalSave').addEventListener('click', () => {
+        state.profile.twitter = document.getElementById('modalTwitter').value;
+        state.profile.note = document.getElementById('modalNote').value;
+        state.profile.facebook = document.getElementById('modalFacebook').value;
+        state.profile.hp = document.getElementById('modalHP').value;
+        state.profile.service = document.getElementById('modalService').value;
+        saveProfile();
+        modal.style.display = 'none';
+    });
+
+    document.getElementById('modalCancel').addEventListener('click', () => {
+        modal.style.display = 'none';
+    });
+};
+
+// Add SNS link editing on double-click
+document.addEventListener('dblclick', (e) => {
+    if (e.target.classList.contains('social-link')) {
+        const modal = document.getElementById('profileModal');
+        modal.style.display = 'flex';
+        modal.style.justifyContent = 'center';
+        modal.style.alignItems = 'center';
+
+        document.getElementById('modalTwitter').value = state.profile.twitter || '';
+        document.getElementById('modalNote').value = state.profile.note || '';
+        document.getElementById('modalFacebook').value = state.profile.facebook || '';
+        document.getElementById('modalHP').value = state.profile.hp || '';
+        document.getElementById('modalService').value = state.profile.service || '';
+    }
+});
+
+createProfileModal();
+
 /* ===== Init ===== */
 state.entries = loadEntries();
+loadProfile();
 loadIntoEditor(todayStr());
