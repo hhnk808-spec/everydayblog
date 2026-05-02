@@ -612,6 +612,26 @@ document.addEventListener('click', (e) => {
     }
 });
 
+/* ===== Export to data.json ===== */
+const exportBtn = document.getElementById('exportBtn');
+exportBtn.addEventListener('click', () => {
+    const payload = {
+        entries: state.entries,
+        profile: state.profile,
+        exportedAt: new Date().toISOString(),
+    };
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'data.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    statusText.textContent = 'data.json をダウンロードしました — リポジトリのルートに置いて push';
+});
+
 /* ===== Init ===== */
 state.entries = loadEntries();
 state.profile = loadProfile();

@@ -117,14 +117,24 @@ body {
     color: var(--green);
     margin-top: 3px;
 }
+.brand-tools {
+    margin-top: 8px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
 .public-link {
     display: inline-block;
-    margin-top: 8px;
     font-size: 11px;
     color: var(--green);
     text-decoration: none;
+    border: none;
     border-bottom: 1px dashed var(--green);
-    padding-bottom: 1px;
+    padding: 0 0 1px;
+    background: transparent;
+    font-family: inherit;
+    cursor: pointer;
     transition: color 0.2s;
 }
 .public-link:hover { color: var(--ink); border-color: var(--ink); }

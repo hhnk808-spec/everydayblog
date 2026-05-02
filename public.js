@@ -396,7 +396,24 @@ function renderAll() {
     renderPopular();
 }
 
+let usingDataJson = false;
+
+async function loadFromDataJson() {
+    try {
+        const res = await fetch('data.json', { cache: 'no-cache' });
+        if (!res.ok) return null;
+        const data = await res.json();
+        return {
+            entries: data.entries || {},
+            profile: data.profile || { name: '', intro: '', photo: '', socials: {} },
+        };
+    } catch (e) {
+        return null;
+    }
+}
+
 window.addEventListener('storage', (e) => {
+    if (usingDataJson) return;
     if (e.key === STORAGE_KEY || e.key === PROFILE_KEY) {
         state.entries = loadEntries();
         state.profile = loadProfile();
@@ -404,6 +421,15 @@ window.addEventListener('storage', (e) => {
     }
 });
 
-state.entries = loadEntries();
-state.profile = loadProfile();
-renderAll();
+(async () => {
+    const fromJson = await loadFromDataJson();
+    if (fromJson) {
+        usingDataJson = true;
+        state.entries = fromJson.entries;
+        state.profile = fromJson.profile;
+    } else {
+        state.entries = loadEntries();
+        state.profile = loadProfile();
+    }
+    renderAll();
+})();
