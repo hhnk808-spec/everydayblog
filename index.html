@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>毎日日記</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>毎日日記</h1>
+
+        <div class="input-section">
+            <input type="date" id="dateInput">
+            <textarea id="entryInput" placeholder="今日の出来事を書いてください..."></textarea>
+            <button id="saveBtn">保存</button>
+        </div>
+
+        <div class="entries-section">
+            <h2>過去の日記</h2>
+            <div id="entriesList"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
