@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>毎日日記</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Shippori+Mincho:wght@500;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="desk">
+        <div class="book">
+            <aside class="left-page">
+                <header class="brand">
+                    <div class="brand-title">毎日日記</div>
+                    <div class="brand-sub">Daily Journal</div>
+                    <a href="index.html" target="_blank" class="public-link">公開ページを見る ↗</a>
+                </header>
+
+                <section class="profile-card">
+                    <div class="profile-top">
+                        <div class="profile-photo-wrap" id="photoWrap" title="クリックで写真を変更">
+                            <img id="profilePhoto" class="profile-photo" alt="プロフィール写真">
+                            <div class="photo-overlay">変更</div>
+                            <input type="file" id="photoInput" accept="image/*" hidden>
+                        </div>
+                        <div class="profile-head">
+                            <div class="profile-name" id="profileNameView">名前を設定</div>
+                            <input type="text" id="profileNameInput" class="profile-name-input" maxlength="40" placeholder="お名前" hidden>
+                        </div>
+                    </div>
+
+                    <p class="profile-intro" id="profileIntroView">自己紹介を書きましょう</p>
+                    <div class="intro-edit-wrap" hidden>
+                        <textarea id="profileIntroInput" class="profile-intro-input" maxlength="200" placeholder="自己紹介 (最大200文字)"></textarea>
+                        <div class="intro-count"><span id="introCount">0</span> / 200</div>
+                    </div>
+
+                    <div class="profile-socials" id="socialsView"></div>
+                    <div class="socials-edit" id="socialsEdit" hidden>
+                        <label><span>X</span><input type="url" data-key="twitter" placeholder="https://x.com/..."></label>
+                        <label><span>note</span><input type="url" data-key="note" placeholder="https://note.com/..."></label>
+                        <label><span>Facebook</span><input type="url" data-key="facebook" placeholder="https://facebook.com/..."></label>
+                        <label><span>HP</span><input type="url" data-key="hp" placeholder="https://..."></label>
+                        <label><span>サービス</span><input type="url" data-key="service" placeholder="https://..."></label>
+                    </div>
+
+                    <div class="profile-actions">
+                        <button id="profileEditBtn" class="ghost-btn">プロフィール編集</button>
+                        <button id="profileSaveBtn" class="primary-btn-sm" hidden>保存</button>
+                        <button id="profileCancelBtn" class="ghost-btn" hidden>キャンセル</button>
+                    </div>
+                </section>
+
+                <section class="calendar">
+                    <div class="calendar-head">
+                        <button id="prevMonth" class="cal-nav" aria-label="前の月">‹</button>
+                        <div id="calLabel" class="cal-label"></div>
+                        <button id="nextMonth" class="cal-nav" aria-label="次の月">›</button>
+                    </div>
+                    <div class="calendar-grid" id="calGrid"></div>
+                </section>
+
+                <section class="search-block">
+                    <input type="search" id="searchInput" placeholder="日記・タグを検索...">
+                </section>
+
+                <section class="entries-block">
+                    <div class="entries-head">
+                        <span>過去の日記</span>
+                        <button id="newBtn" class="ghost-btn" title="新しい日記">＋ 新規</button>
+                    </div>
+                    <ul id="entriesList" class="entries-list"></ul>
+                </section>
+            </aside>
+
+            <div class="binding"></div>
+
+            <main class="right-page">
+                <div class="page-toolbar">
+                    <input type="date" id="dateInput" class="date-field">
+                    <div class="toolbar-spacer"></div>
+                    <button id="publishBtn" class="publish-btn" aria-pressed="false" title="公開状態を切り替え">
+                        <span class="publish-dot"></span>
+                        <span id="publishLabel">下書き</span>
+                    </button>
+                    <button id="likeBtn" class="like-btn" aria-pressed="false" title="いいね">
+                        <span class="heart">♡</span>
+                        <span id="likeCount" class="like-count">0</span>
+                    </button>
+                    <button id="deleteBtn" class="icon-btn danger" title="削除">削除</button>
+                </div>
+
+                <div class="paper">
+                    <textarea id="entryInput" class="entry-input" placeholder="今日の出来事、決めたこと、気づきを綴る..." spellcheck="false"></textarea>
+                </div>
+
+                <div class="image-strip" id="imageStrip">
+                    <button id="addImageBtn" class="add-image-btn" type="button" title="画像を追加">
+                        <span class="plus">＋</span>
+                        <span>画像</span>
+                    </button>
+                    <input type="file" id="imageInput" accept="image/*" multiple hidden>
+                </div>
+
+                <div class="tag-row">
+                    <span class="tag-label">タグ</span>
+                    <div id="tagChips" class="tag-chips"></div>
+                    <input type="text" id="tagInput" class="tag-input" placeholder="タグを追加 (Enter)">
+                    <div class="emoji-wrap">
+                        <button id="emojiBtn" class="emoji-btn" type="button" title="絵文字を挿入">😊</button>
+                        <div id="emojiPicker" class="emoji-picker" hidden></div>
+                    </div>
+                </div>
+
+                <footer class="page-footer">
+                    <div id="statusText" class="status-text">新しい日記</div>
+                    <div class="footer-right">
+                        <span id="charCount" class="char-count">0 文字</span>
+                        <button id="saveBtn" class="save-btn">保存</button>
+                    </div>
+                </footer>
+            </main>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
