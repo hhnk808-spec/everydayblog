@@ -4,147 +4,577 @@
     box-sizing: border-box;
 }
 
+:root {
+    --ink: #2b1f17;
+    --ink-soft: #5a4a3c;
+    --ink-faint: #9a8978;
+    --paper: #f8efdc;
+    --paper-shade: #efe2c5;
+    --paper-line: #d9c8a3;
+    --paper-margin: #c46a5e;
+    --leather: #3a2218;
+    --leather-edge: #1f110a;
+    --gold: #b8893d;
+    --accent: #c0392b;
+    --shadow: rgba(0, 0, 0, 0.35);
+}
+
+html, body {
+    height: 100%;
+}
+
 body {
-    font-family: 'Arial', sans-serif;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    font-family: 'Klee One', 'Hiragino Mincho ProN', 'Yu Mincho', serif;
+    color: var(--ink);
+    background:
+        radial-gradient(ellipse at center, #4a2d20 0%, #2a160d 70%, #160a05 100%);
     min-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 28px;
+    overflow-x: hidden;
 }
 
-.container {
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    padding: 40px;
-    max-width: 600px;
+.desk {
     width: 100%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: center;
 }
 
-h1 {
+/* ===== Book ===== */
+.book {
+    width: 100%;
+    height: calc(100vh - 56px);
+    max-height: 880px;
+    min-height: 620px;
+    display: grid;
+    grid-template-columns: 360px 14px 1fr;
+    background: var(--paper);
+    border-radius: 6px;
+    box-shadow:
+        0 30px 60px var(--shadow),
+        0 0 0 8px var(--leather),
+        0 0 0 12px var(--leather-edge),
+        inset 0 0 60px rgba(120, 80, 40, 0.12);
+    overflow: hidden;
+    position: relative;
+}
+
+.book::before,
+.book::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    pointer-events: none;
+}
+.book::before {
+    left: 0;
+    background: linear-gradient(to right, rgba(0,0,0,0.18), transparent);
+}
+.book::after {
+    right: 0;
+    background: linear-gradient(to left, rgba(0,0,0,0.18), transparent);
+}
+
+/* ===== Binding ===== */
+.binding {
+    background:
+        linear-gradient(to right,
+            rgba(0,0,0,0.35) 0%,
+            rgba(0,0,0,0.05) 35%,
+            rgba(255,255,255,0.15) 50%,
+            rgba(0,0,0,0.05) 65%,
+            rgba(0,0,0,0.35) 100%);
+}
+
+/* ===== Left Page (Index) ===== */
+.left-page {
+    background: var(--paper-shade);
+    padding: 28px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    border-right: 1px solid rgba(0,0,0,0.05);
+    overflow: hidden;
+}
+
+.brand {
     text-align: center;
-    color: #333;
-    margin-bottom: 30px;
-    font-size: 28px;
+    border-bottom: 1px solid var(--paper-line);
+    padding-bottom: 12px;
+}
+.brand-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    color: var(--ink);
+}
+.brand-sub {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    color: var(--gold);
+    margin-top: 4px;
 }
 
-.input-section {
-    margin-bottom: 40px;
+/* ===== Calendar ===== */
+.calendar {
+    background: rgba(255,255,255,0.25);
+    border: 1px solid var(--paper-line);
+    border-radius: 4px;
+    padding: 10px 12px;
 }
-
-input[type="date"] {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 5px;
-    font-size: 16px;
-    transition: border-color 0.3s;
+.calendar-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
 }
-
-input[type="date"]:focus {
-    outline: none;
-    border-color: #667eea;
-}
-
-textarea {
-    width: 100%;
-    height: 200px;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 2px solid #e0e0e0;
-    border-radius: 5px;
-    font-size: 16px;
-    font-family: 'Arial', sans-serif;
-    resize: vertical;
-    transition: border-color 0.3s;
-}
-
-textarea:focus {
-    outline: none;
-    border-color: #667eea;
-}
-
-button {
-    width: 100%;
-    padding: 12px;
-    background: #667eea;
-    color: white;
+.cal-nav {
+    width: 26px;
+    height: 26px;
     border: none;
-    border-radius: 5px;
-    font-size: 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-button:hover {
-    background: #764ba2;
-}
-
-button:active {
-    transform: scale(0.98);
-}
-
-.entries-section {
-    border-top: 2px solid #e0e0e0;
-    padding-top: 20px;
-}
-
-.entries-section h2 {
-    color: #333;
-    margin-bottom: 20px;
+    background: transparent;
+    color: var(--ink-soft);
     font-size: 20px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.2s;
+    font-family: serif;
+}
+.cal-nav:hover { background: rgba(0,0,0,0.06); }
+
+.cal-label {
+    font-family: 'Shippori Mincho', serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 11px;
+}
+.cal-cell {
+    aspect-ratio: 1 / 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-soft);
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.15s, color 0.15s;
+    position: relative;
+}
+.cal-cell.head {
+    cursor: default;
+    color: var(--ink-faint);
+    font-size: 10px;
+}
+.cal-cell.empty { cursor: default; }
+.cal-cell.has-entry {
+    color: var(--ink);
+    font-weight: 600;
+    background: rgba(184, 137, 61, 0.18);
+}
+.cal-cell.has-entry::after {
+    content: "";
+    position: absolute;
+    bottom: 2px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--accent);
+}
+.cal-cell.today {
+    outline: 1.5px solid var(--gold);
+}
+.cal-cell.selected {
+    background: var(--ink);
+    color: var(--paper);
+}
+.cal-cell:not(.empty):not(.head):hover {
+    background: rgba(0,0,0,0.08);
+}
+
+/* ===== Search ===== */
+.search-block input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid var(--paper-line);
+    border-radius: 4px;
+    background: rgba(255,255,255,0.5);
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--ink);
+    transition: border-color 0.2s, background 0.2s;
+}
+.search-block input:focus {
+    outline: none;
+    border-color: var(--gold);
+    background: rgba(255,255,255,0.85);
+}
+
+/* ===== Entries list ===== */
+.entries-block {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+}
+.entries-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: var(--ink-soft);
+}
+.ghost-btn {
+    background: transparent;
+    border: 1px solid var(--ink-soft);
+    color: var(--ink-soft);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.ghost-btn:hover {
+    background: var(--ink);
+    color: var(--paper);
+    border-color: var(--ink);
+}
+
+.entries-list {
+    list-style: none;
+    overflow-y: auto;
+    padding-right: 4px;
+    flex: 1;
+}
+.entries-list::-webkit-scrollbar { width: 6px; }
+.entries-list::-webkit-scrollbar-thumb {
+    background: var(--paper-line);
+    border-radius: 3px;
 }
 
 .entry-item {
-    background: #f9f9f9;
-    border-left: 4px solid #667eea;
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-}
-
-.entry-date {
-    font-weight: bold;
-    color: #667eea;
-    margin-bottom: 8px;
-    font-size: 14px;
-}
-
-.entry-text {
-    color: #555;
-    line-height: 1.6;
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    margin-bottom: 10px;
-}
-
-.entry-actions {
-    display: flex;
-    gap: 10px;
-}
-
-.delete-btn {
-    flex: 1;
-    padding: 8px;
-    background: #ff6b6b;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    font-size: 14px;
+    padding: 10px 10px;
+    border-bottom: 1px dashed var(--paper-line);
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background 0.15s;
+}
+.entry-item:hover { background: rgba(255,255,255,0.4); }
+.entry-item.active {
+    background: rgba(184, 137, 61, 0.18);
+    border-left: 3px solid var(--gold);
+    padding-left: 7px;
 }
 
-.delete-btn:hover {
-    background: #ff5252;
+.entry-item-date {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 12px;
+    color: var(--ink-soft);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+}
+.entry-item-preview {
+    font-size: 12px;
+    color: var(--ink);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+.entry-item-meta {
+    margin-top: 4px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    align-items: center;
+}
+.entry-item-tag {
+    font-size: 10px;
+    color: var(--gold);
+}
+.entry-item-like {
+    color: var(--accent);
+    font-size: 11px;
 }
 
-#entriesList:empty::before {
-    content: "日記がまだありません";
-    color: #999;
+.empty-state {
+    text-align: center;
+    color: var(--ink-faint);
     font-style: italic;
+    padding: 30px 10px;
+    font-size: 12px;
+}
+
+/* ===== Right Page (Editor) ===== */
+.right-page {
+    padding: 32px 44px 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    background:
+        linear-gradient(to right, rgba(0,0,0,0.06), transparent 40px),
+        var(--paper);
+    overflow: hidden;
+}
+
+.page-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--paper-line);
+}
+
+.date-field {
+    background: transparent;
+    border: none;
+    border-bottom: 1px dashed var(--ink-faint);
+    font-family: 'Shippori Mincho', serif;
+    font-size: 16px;
+    color: var(--ink);
+    padding: 4px 6px;
+    cursor: pointer;
+}
+.date-field:focus { outline: none; border-bottom-color: var(--gold); }
+
+.toolbar-spacer { flex: 1; }
+
+.like-btn {
+    background: transparent;
+    border: 1px solid var(--paper-line);
+    border-radius: 999px;
+    padding: 5px 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-family: inherit;
+    color: var(--ink-soft);
+    transition: all 0.2s;
+}
+.like-btn:hover { background: rgba(192, 57, 43, 0.08); }
+.like-btn[aria-pressed="true"] {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: rgba(192, 57, 43, 0.08);
+}
+.like-btn .heart {
+    font-size: 16px;
+    line-height: 1;
+}
+.like-btn[aria-pressed="true"] .heart::before {
+    content: "♥";
+}
+.like-btn[aria-pressed="true"] .heart {
+    font-size: 0;
+}
+.like-btn[aria-pressed="true"] .heart::before {
+    font-size: 16px;
+}
+.like-count {
+    font-size: 12px;
+    font-family: 'Shippori Mincho', serif;
+}
+
+.icon-btn {
+    background: transparent;
+    border: 1px solid var(--paper-line);
+    color: var(--ink-soft);
+    border-radius: 4px;
+    padding: 5px 12px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+.icon-btn.danger:hover {
+    background: var(--accent);
+    color: var(--paper);
+    border-color: var(--accent);
+}
+
+/* ===== Paper (lined) ===== */
+.paper {
+    flex: 1;
+    position: relative;
+    background-color: var(--paper);
+    background-image:
+        linear-gradient(to right, transparent 60px, var(--paper-margin) 60px, var(--paper-margin) 61px, transparent 61px),
+        repeating-linear-gradient(
+            to bottom,
+            transparent,
+            transparent 35px,
+            var(--paper-line) 35px,
+            var(--paper-line) 36px
+        );
+    border: 1px solid var(--paper-line);
+    border-radius: 2px;
+    box-shadow:
+        inset 0 1px 3px rgba(0,0,0,0.05),
+        inset 0 0 60px rgba(180, 140, 80, 0.1);
+    overflow: hidden;
+}
+
+.entry-input {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    font-family: 'Klee One', 'Zen Kurenaido', 'Hiragino Mincho ProN', serif;
+    font-size: 18px;
+    line-height: 36px;
+    color: var(--ink);
+    padding: 8px 24px 8px 76px;
+    letter-spacing: 0.02em;
+}
+.entry-input::placeholder {
+    color: var(--ink-faint);
+    font-style: italic;
+}
+
+/* ===== Tag row ===== */
+.tag-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+.tag-label {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 12px;
+    color: var(--ink-soft);
+    letter-spacing: 0.1em;
+}
+.tag-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.tag-chip {
+    background: rgba(184, 137, 61, 0.18);
+    color: var(--ink);
+    border: 1px solid rgba(184, 137, 61, 0.4);
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.tag-chip button {
+    background: none;
+    border: none;
+    color: var(--ink-faint);
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    padding: 0;
+}
+.tag-chip button:hover { color: var(--accent); }
+
+.tag-input {
+    flex: 1;
+    min-width: 120px;
+    background: transparent;
+    border: none;
+    border-bottom: 1px dashed var(--ink-faint);
+    padding: 4px 6px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--ink);
+}
+.tag-input:focus { outline: none; border-bottom-color: var(--gold); }
+
+/* ===== Footer ===== */
+.page-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 8px;
+    border-top: 1px solid var(--paper-line);
+}
+.status-text {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 12px;
+    color: var(--ink-faint);
+    letter-spacing: 0.05em;
+}
+.footer-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+.char-count {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 12px;
+    color: var(--ink-faint);
+}
+.save-btn {
+    background: var(--ink);
+    color: var(--paper);
+    border: none;
+    padding: 8px 28px;
+    border-radius: 3px;
+    font-family: 'Shippori Mincho', serif;
+    font-size: 14px;
+    letter-spacing: 0.15em;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+}
+.save-btn:hover {
+    background: var(--gold);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+.save-btn:active { transform: translateY(0); }
+
+/* ===== Responsive ===== */
+@media (max-width: 880px) {
+    body { padding: 12px; }
+    .book {
+        grid-template-columns: 1fr;
+        grid-template-rows: auto 1fr;
+        height: auto;
+        max-height: none;
+    }
+    .binding { display: none; }
+    .left-page {
+        max-height: 40vh;
+    }
+    .right-page {
+        padding: 22px 22px 18px;
+    }
+    .entry-input {
+        padding: 8px 16px 8px 60px;
+        font-size: 16px;
+        line-height: 32px;
+    }
+    .paper {
+        background-image:
+            linear-gradient(to right, transparent 44px, var(--paper-margin) 44px, var(--paper-margin) 45px, transparent 45px),
+            repeating-linear-gradient(to bottom, transparent, transparent 31px, var(--paper-line) 31px, var(--paper-line) 32px);
+    }
 }

@@ -4,21 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>毎日日記</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Shippori+Mincho:wght@500;700&family=Zen+Kurenaido&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>毎日日記</h1>
+    <div class="desk">
+        <div class="book">
+            <aside class="left-page">
+                <header class="brand">
+                    <div class="brand-title">毎日日記</div>
+                    <div class="brand-sub">Daily Journal</div>
+                </header>
 
-        <div class="input-section">
-            <input type="date" id="dateInput">
-            <textarea id="entryInput" placeholder="今日の出来事を書いてください..."></textarea>
-            <button id="saveBtn">保存</button>
-        </div>
+                <section class="calendar">
+                    <div class="calendar-head">
+                        <button id="prevMonth" class="cal-nav" aria-label="前の月">‹</button>
+                        <div id="calLabel" class="cal-label"></div>
+                        <button id="nextMonth" class="cal-nav" aria-label="次の月">›</button>
+                    </div>
+                    <div class="calendar-grid" id="calGrid"></div>
+                </section>
 
-        <div class="entries-section">
-            <h2>過去の日記</h2>
-            <div id="entriesList"></div>
+                <section class="search-block">
+                    <input type="search" id="searchInput" placeholder="日記・タグを検索...">
+                </section>
+
+                <section class="entries-block">
+                    <div class="entries-head">
+                        <span>過去の日記</span>
+                        <button id="newBtn" class="ghost-btn" title="新しい日記">＋ 新規</button>
+                    </div>
+                    <ul id="entriesList" class="entries-list"></ul>
+                </section>
+            </aside>
+
+            <div class="binding"></div>
+
+            <main class="right-page">
+                <div class="page-toolbar">
+                    <input type="date" id="dateInput" class="date-field">
+                    <div class="toolbar-spacer"></div>
+                    <button id="likeBtn" class="like-btn" aria-pressed="false" title="いいね">
+                        <span class="heart">♡</span>
+                        <span id="likeCount" class="like-count">0</span>
+                    </button>
+                    <button id="deleteBtn" class="icon-btn danger" title="削除">削除</button>
+                </div>
+
+                <div class="paper">
+                    <textarea id="entryInput" class="entry-input" placeholder="今日の出来事、決めたこと、気づきを綴る..." spellcheck="false"></textarea>
+                </div>
+
+                <div class="tag-row">
+                    <span class="tag-label">タグ</span>
+                    <div id="tagChips" class="tag-chips"></div>
+                    <input type="text" id="tagInput" class="tag-input" placeholder="タグを追加 (Enter)">
+                </div>
+
+                <footer class="page-footer">
+                    <div id="statusText" class="status-text">新しい日記</div>
+                    <div class="footer-right">
+                        <span id="charCount" class="char-count">0 文字</span>
+                        <button id="saveBtn" class="save-btn">保存</button>
+                    </div>
+                </footer>
+            </main>
         </div>
     </div>
 
