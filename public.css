@@ -337,6 +337,15 @@ body {
 }
 
 .feed-card-main { min-width: 0; }
+.feed-card-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 12px;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+}
 .feed-card-cover {
     position: relative;
     width: 100%;
@@ -475,10 +484,21 @@ body {
     font-family: 'Shippori Mincho', serif;
     font-size: 14px;
     color: var(--green-deep);
-    margin-bottom: 24px;
+    margin-bottom: 12px;
     letter-spacing: 0.15em;
     padding-left: 24px;
 }
+.reader-title {
+    font-family: 'Shippori Mincho', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 24px;
+    padding-left: 24px;
+    line-height: 1.4;
+    letter-spacing: 0.04em;
+}
+.reader-title[hidden] { display: none; }
 .reader-body {
     font-family: 'Klee One', 'Zen Maru Gothic', sans-serif;
     font-size: 16px;
@@ -565,5 +585,5 @@ body {
     .feed-card-date { padding-right: 10px; }
     .feed-card-day { font-size: 24px; }
     .reader-card { padding: 36px 22px; background-image: none; }
-    .reader-date, .reader-body, .reader-tags, .reader-actions, .reader-images { padding-left: 0; }
+    .reader-date, .reader-title, .reader-body, .reader-tags, .reader-actions, .reader-images { padding-left: 0; }
 }

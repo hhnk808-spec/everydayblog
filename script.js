@@ -27,6 +27,7 @@ const SOCIAL_SVG = {
 const EMOJI_LIST = ['😊','😄','🥰','😂','😴','😅','😎','🤔','💪','✨','🎉','🌱','🌸','🌷','🌿','🍀','☀️','⛅','🌙','⭐','💡','📝','📚','☕','🍵','🍰','💼','📈','🎯','❤️','💚','🔥','⚡','🙌','👏','🎀','🌈','🥳','🙏','🤝'];
 
 const dateInput = document.getElementById('dateInput');
+const titleInput = document.getElementById('titleInput');
 const entryInput = document.getElementById('entryInput');
 const saveBtn = document.getElementById('saveBtn');
 const deleteBtn = document.getElementById('deleteBtn');
@@ -243,6 +244,7 @@ function loadIntoEditor(date) {
     dateInput.value = date;
     const entry = state.entries[date];
     if (entry) {
+        titleInput.value = entry.title || '';
         entryInput.value = entry.content || '';
         state.draftTags = [...(entry.tags || [])];
         state.draftLikes = entry.likes || 0;
@@ -251,6 +253,7 @@ function loadIntoEditor(date) {
         state.draftImages = [...(entry.images || [])];
         statusText.textContent = `編集中 — ${formatDateLong(date)}`;
     } else {
+        titleInput.value = '';
         entryInput.value = '';
         state.draftTags = [];
         state.draftLikes = 0;
@@ -302,11 +305,12 @@ function saveCurrent() {
     const date = dateInput.value;
     const content = entryInput.value;
     if (!date) { statusText.textContent = '日付を入れてね'; return; }
-    if (!content.trim() && state.draftTags.length === 0) {
-        statusText.textContent = '本文かタグを書いてから保存';
+    if (!content.trim() && state.draftTags.length === 0 && !titleInput.value.trim()) {
+        statusText.textContent = '題名・本文・タグのいずれかを入れてから保存';
         return;
     }
     state.entries[date] = {
+        title: titleInput.value.trim(),
         content,
         tags: [...state.draftTags],
         likes: state.draftLikes,
@@ -439,10 +443,16 @@ function renderEntries() {
             heart.textContent = `♥ ${entry.likes || 1}`;
             dateRow.appendChild(heart);
         }
+        li.appendChild(dateRow);
+        if (entry.title) {
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'entry-item-title';
+            titleDiv.textContent = entry.title;
+            li.appendChild(titleDiv);
+        }
         const preview = document.createElement('div');
         preview.className = 'entry-item-preview';
-        preview.textContent = entry.content || '(本文なし)';
-        li.appendChild(dateRow);
+        preview.textContent = entry.content || (entry.title ? '' : '(本文なし)');
         li.appendChild(preview);
         if (entry.tags && entry.tags.length) {
             const meta = document.createElement('div');

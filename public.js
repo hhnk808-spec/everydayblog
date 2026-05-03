@@ -60,6 +60,7 @@ const readerTags = document.getElementById('readerTags');
 const readerLike = document.getElementById('readerLike');
 const readerLikeCount = document.getElementById('readerLikeCount');
 const readerImages = document.getElementById('readerImages');
+const readerTitle = document.getElementById('readerTitle');
 const calGrid = document.getElementById('calGrid');
 const calLabel = document.getElementById('calLabel');
 const prevMonth = document.getElementById('prevMonth');
@@ -171,6 +172,13 @@ function renderFeed() {
         const main = document.createElement('div');
         main.className = 'feed-card-main';
 
+        if (entry.title) {
+            const titleEl = document.createElement('h3');
+            titleEl.className = 'feed-card-title';
+            titleEl.textContent = entry.title;
+            main.appendChild(titleEl);
+        }
+
         if (entry.images && entry.images.length) {
             const cover = document.createElement('div');
             cover.className = 'feed-card-cover';
@@ -227,6 +235,12 @@ function openReader(date) {
     if (!entry) return;
     state.currentDate = date;
     readerDate.textContent = formatLong(date);
+    if (entry.title) {
+        readerTitle.textContent = entry.title;
+        readerTitle.hidden = false;
+    } else {
+        readerTitle.hidden = true;
+    }
     readerImages.innerHTML = '';
     if (entry.images && entry.images.length) {
         entry.images.forEach(src => {
@@ -381,7 +395,7 @@ function renderPopular() {
 
         const preview = document.createElement('div');
         preview.className = 'popular-preview';
-        preview.textContent = entry.content || '(本文なし)';
+        preview.textContent = entry.title || entry.content || '(本文なし)';
 
         li.appendChild(head);
         li.appendChild(preview);
