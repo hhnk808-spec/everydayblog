@@ -26,55 +26,6 @@
         </div>
     </div>
 
-    <div class="deco deco-heart" aria-hidden="true">♥</div>
-    <div class="deco deco-bubble" aria-hidden="true"></div>
-
-    <svg class="stamp stamp-chrome-star" viewBox="0 0 100 100" aria-hidden="true">
-        <defs>
-            <radialGradient id="chromeStarGrad" cx="30%" cy="30%">
-                <stop offset="0%" stop-color="#FFFFFF"/>
-                <stop offset="50%" stop-color="#FFB6E1"/>
-                <stop offset="100%" stop-color="#9B7BB8"/>
-            </radialGradient>
-        </defs>
-        <path d="M50,5 L61,38 L95,38 L67,58 L78,92 L50,72 L22,92 L33,58 L5,38 L39,38 Z"
-              fill="url(#chromeStarGrad)" stroke="#000" stroke-width="3"/>
-    </svg>
-
-    <svg class="stamp stamp-cyber-flower" viewBox="0 0 100 100" aria-hidden="true">
-        <defs>
-            <radialGradient id="cyberFlowerGrad">
-                <stop offset="0%" stop-color="#FFFFFF"/>
-                <stop offset="60%" stop-color="#FF6BB5"/>
-                <stop offset="100%" stop-color="#C8202A"/>
-            </radialGradient>
-        </defs>
-        <g stroke="#000" stroke-width="2.5">
-            <ellipse cx="50" cy="25" rx="15" ry="22" fill="url(#cyberFlowerGrad)"/>
-            <ellipse cx="50" cy="75" rx="15" ry="22" fill="url(#cyberFlowerGrad)"/>
-            <ellipse cx="25" cy="50" rx="22" ry="15" fill="url(#cyberFlowerGrad)"/>
-            <ellipse cx="75" cy="50" rx="22" ry="15" fill="url(#cyberFlowerGrad)"/>
-            <circle cx="50" cy="50" r="10" fill="#FFE600"/>
-        </g>
-    </svg>
-
-    <svg class="stamp stamp-checker-heart" viewBox="0 0 100 90" aria-hidden="true">
-        <defs>
-            <pattern id="checkerPat" width="8" height="8" patternUnits="userSpaceOnUse">
-                <rect width="4" height="4" fill="#C8202A"/>
-                <rect x="4" y="4" width="4" height="4" fill="#C8202A"/>
-                <rect x="4" width="4" height="4" fill="#FFFFFF"/>
-                <rect y="4" width="4" height="4" fill="#FFFFFF"/>
-            </pattern>
-        </defs>
-        <path d="M50,85 C50,85 10,55 10,30 C10,15 22,8 35,8 C42,8 47,13 50,20 C53,13 58,8 65,8 C78,8 90,15 90,30 C90,55 50,85 50,85 Z"
-              fill="url(#checkerPat)" stroke="#000" stroke-width="3"/>
-    </svg>
-
-    <svg class="stamp stamp-sparkle" viewBox="0 0 100 100" aria-hidden="true">
-        <path d="M50,0 Q55,45 100,50 Q55,55 50,100 Q45,55 0,50 Q45,45 50,0 Z"
-              fill="#FFFFFF" stroke="#C8202A" stroke-width="3"/>
-    </svg>
 
     <header class="topbar">
         <div class="topbar-left">
@@ -92,6 +43,20 @@
     </header>
 
     <header class="site-header">
+        <div class="decoration-layer" aria-hidden="true">
+            <div class="deco-item deco-blob-1 anim-float">
+                <img src="images/decorations/chrome-blob-01.png" alt="" class="deco-image" onerror="this.parentElement.style.display='none'">
+            </div>
+            <div class="deco-item deco-heart-img anim-float-slow" style="animation-delay: 0.5s">
+                <img src="images/decorations/chrome-heart.png" alt="" class="deco-image" onerror="this.parentElement.style.display='none'">
+            </div>
+            <div class="deco-item deco-star-img anim-rotate" style="animation-delay: 1s">
+                <img src="images/decorations/chrome-star.png" alt="" class="deco-image" onerror="this.parentElement.style.display='none'">
+            </div>
+            <div class="deco-item deco-blob-2 anim-wiggle" style="animation-delay: 1.5s">
+                <img src="images/decorations/chrome-blob-02.png" alt="" class="deco-image" onerror="this.parentElement.style.display='none'">
+            </div>
+        </div>
         <div class="hero">
             <div class="profile-swiper" id="profileSwiper">
                 <div class="indicator-bar" id="indicatorBar"></div>

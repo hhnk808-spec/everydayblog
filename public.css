@@ -340,7 +340,80 @@ body::after {
     padding: 80px 5vw;
     min-height: 70vh;
     animation: fade-up 0.7s ease 0.2s both;
+    overflow: hidden;
 }
+
+/* ===== Decoration Layer (chrome PNG objects) ===== */
+.decoration-layer {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
+}
+.deco-item {
+    position: absolute;
+    will-change: transform;
+}
+.deco-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    filter: drop-shadow(8px 12px 16px rgba(0, 0, 0, 0.25));
+}
+.deco-blob-1 {
+    bottom: -80px;
+    left: -60px;
+    width: clamp(280px, 32vw, 480px);
+}
+.deco-heart-img {
+    top: 60px;
+    right: 40px;
+    width: clamp(140px, 18vw, 260px);
+}
+.deco-star-img {
+    top: 45%;
+    right: 6%;
+    width: clamp(100px, 12vw, 180px);
+}
+.deco-blob-2 {
+    bottom: 8%;
+    right: -40px;
+    width: clamp(140px, 16vw, 220px);
+}
+
+@keyframes deco-float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-20px) rotate(2deg); }
+}
+@keyframes deco-float-slow {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50%      { transform: translateY(-30px) rotate(-3deg); }
+}
+@keyframes deco-rotate {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    50%      { transform: rotate(15deg) scale(1.05); }
+}
+@keyframes deco-wiggle {
+    0%, 100% { transform: rotate(-3deg) translateY(0); }
+    50%      { transform: rotate(3deg) translateY(-10px); }
+}
+.anim-float       { animation: deco-float 5s ease-in-out infinite; }
+.anim-float-slow  { animation: deco-float-slow 7s ease-in-out infinite; }
+.anim-rotate      { animation: deco-rotate 8s ease-in-out infinite; }
+.anim-wiggle      { animation: deco-wiggle 4s ease-in-out infinite; }
+
+@media (max-width: 768px) {
+    .deco-star-img, .deco-blob-2 { display: none; }
+    .deco-blob-1 { width: 200px; bottom: -40px; left: -40px; }
+    .deco-heart-img { width: 100px; top: 40px; right: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .anim-float, .anim-float-slow, .anim-rotate, .anim-wiggle { animation: none; }
+}
+
+/* hero content sits above decoration */
+.hero { position: relative; z-index: 10; }
 .hero {
     max-width: 1320px;
     margin: 0 auto;
