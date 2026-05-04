@@ -706,6 +706,58 @@ window.addEventListener('load', () => {
 })();
 
 /* ============================================================
+   Visitor Counter
+   ============================================================ */
+(function initVisitorCounter() {
+    const display = document.getElementById('counterDisplay');
+    const number = document.getElementById('counterNumber');
+    if (!display || !number) return;
+
+    const NAMESPACE = 'honokablog2026';
+    const KEY = 'visitor';
+    const DIGITS = 6;
+
+    function renderDigits(n) {
+        const padded = String(n).padStart(DIGITS, '0');
+        display.innerHTML = '';
+        for (const ch of padded) {
+            const sp = document.createElement('span');
+            sp.className = 'counter-digit';
+            sp.textContent = ch;
+            display.appendChild(sp);
+        }
+        number.textContent = n.toLocaleString();
+    }
+
+    function animateTo(target) {
+        const start = performance.now();
+        const duration = 2000;
+        function tick(t) {
+            const p = Math.min((t - start) / duration, 1);
+            const eased = p === 1 ? 1 : 1 - Math.pow(2, -10 * p);
+            renderDigits(Math.floor(target * eased));
+            if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+    }
+
+    const alreadyCounted = sessionStorage.getItem('visitor-counted') === '1';
+    const endpoint = alreadyCounted
+        ? `https://abacus.jasoncameron.dev/get/${NAMESPACE}/${KEY}`
+        : `https://abacus.jasoncameron.dev/hit/${NAMESPACE}/${KEY}`;
+
+    fetch(endpoint, { cache: 'no-store' })
+        .then(r => r.ok ? r.json() : Promise.reject())
+        .then(data => {
+            if (typeof data.value === 'number') {
+                sessionStorage.setItem('visitor-counted', '1');
+                animateTo(data.value);
+            }
+        })
+        .catch(() => {});
+})();
+
+/* ============================================================
    Star Rain
    ============================================================ */
 (function initStarRain() {
