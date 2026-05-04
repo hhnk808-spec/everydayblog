@@ -254,26 +254,32 @@ body::after {
     display: block;
     filter: drop-shadow(8px 12px 16px rgba(0, 0, 0, 0.25));
 }
-.deco-blob-1 {
-    bottom: -80px;
-    left: -60px;
-    width: clamp(280px, 32vw, 480px);
+/* Hero decorations - sprinkled around */
+.deco-h1 { top: 6%;     left: -2%;   width: clamp(150px, 20vw, 260px); }
+.deco-h2 { top: 4%;     right: 6%;   width: clamp(110px, 14vw, 200px); transform: rotate(-8deg); }
+.deco-h3 { top: 38%;    left: -3%;   width: clamp(120px, 16vw, 220px); }
+.deco-h4 { top: 28%;    right: -1%;  width: clamp(130px, 16vw, 220px); }
+.deco-h5 { bottom: -50px; left: 24%; width: clamp(140px, 16vw, 220px); transform: rotate(6deg); }
+.deco-h6 { bottom: 4%;  right: 12%;  width: clamp(100px, 12vw, 180px); }
+.deco-h7 { top: 18%;    left: 38%;   width: clamp(70px, 9vw, 130px); transform: rotate(-12deg); }
+.deco-h8 { bottom: 14%; left: 2%;    width: clamp(90px, 11vw, 160px); }
+
+/* Content decorations - sprinkled along the feed/widgets */
+.decoration-layer-content {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 1;
 }
-.deco-heart-img {
-    top: 60px;
-    right: 40px;
-    width: clamp(140px, 18vw, 260px);
-}
-.deco-star-img {
-    top: 45%;
-    right: 6%;
-    width: clamp(100px, 12vw, 180px);
-}
-.deco-blob-2 {
-    bottom: 8%;
-    right: -40px;
-    width: clamp(140px, 16vw, 220px);
-}
+.deco-c1 { top: 2%;     right: -3%;  width: clamp(110px, 13vw, 190px); transform: rotate(7deg); }
+.deco-c2 { top: 16%;    left: -3%;   width: clamp(80px, 10vw, 150px); }
+.deco-c3 { top: 36%;    right: 0;    width: clamp(100px, 12vw, 170px); transform: rotate(-9deg); }
+.deco-c4 { top: 52%;    left: 1%;    width: clamp(80px, 10vw, 140px); }
+.deco-c5 { top: 70%;    right: -2%;  width: clamp(110px, 13vw, 180px); transform: rotate(11deg); }
+.deco-c6 { bottom: 4%;  left: -1%;   width: clamp(80px, 10vw, 150px); transform: rotate(-5deg); }
+
+.content-wrap { position: relative; }
 
 @keyframes deco-float {
     0%, 100% { transform: translateY(0) rotate(0deg); }
@@ -297,9 +303,12 @@ body::after {
 .anim-wiggle      { animation: deco-wiggle 4s ease-in-out infinite; }
 
 @media (max-width: 768px) {
-    .deco-star-img, .deco-blob-2 { display: none; }
-    .deco-blob-1 { width: 200px; bottom: -40px; left: -40px; }
-    .deco-heart-img { width: 100px; top: 40px; right: 20px; }
+    .deco-h3, .deco-h4, .deco-h7, .deco-h8 { display: none; }
+    .deco-c2, .deco-c4, .deco-c6 { display: none; }
+    .deco-h1 { width: 130px; }
+    .deco-h2 { width: 90px; }
+    .deco-h5 { width: 110px; bottom: -30px; }
+    .deco-h6 { width: 80px; }
 }
 @media (prefers-reduced-motion: reduce) {
     .anim-float, .anim-float-slow, .anim-rotate, .anim-wiggle { animation: none; }
