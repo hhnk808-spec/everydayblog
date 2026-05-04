@@ -254,16 +254,15 @@ body::after {
     display: block;
     filter: drop-shadow(8px 12px 16px rgba(0, 0, 0, 0.25));
 }
-/* Hero decorations - sprinkled in safe zones (avoiding the right-column BLOG text) */
-/* Safe zones: left column (around photo), top edge (<12%), bottom edge (>78%), far-right edge */
-.deco-h1 { top: 2%;       left: -2%;    width: clamp(140px, 18vw, 230px); transform: rotate(-6deg); }
-.deco-h2 { top: 3%;       right: -2%;   width: clamp(100px, 12vw, 170px); transform: rotate(8deg); }
-.deco-h3 { top: 36%;      left: -3%;    width: clamp(110px, 14vw, 190px); }
-.deco-h4 { top: 18%;      left: 30%;    width: clamp(70px, 8vw, 110px);  transform: rotate(-14deg); }
-.deco-h5 { bottom: -50px; left: 22%;    width: clamp(130px, 16vw, 210px); transform: rotate(6deg); }
-.deco-h6 { bottom: 2%;    right: 4%;    width: clamp(110px, 13vw, 180px); transform: rotate(-9deg); }
-.deco-h7 { bottom: 18%;   left: 2%;     width: clamp(90px, 11vw, 150px); }
-.deco-h8 { top: 4%;       left: 38%;    width: clamp(60px, 7vw, 100px);  transform: rotate(12deg); }
+/* Hero decorations - hugging the left/right edges, bleeding off-screen */
+.deco-h1 { top: -3%;      left: -7%;     width: clamp(160px, 20vw, 260px); transform: rotate(-12deg); }
+.deco-h2 { top: -2%;      right: -6%;    width: clamp(130px, 15vw, 210px); transform: rotate(14deg); }
+.deco-h3 { top: 34%;      left: -8%;     width: clamp(140px, 17vw, 230px); transform: rotate(-4deg); }
+.deco-h4 { top: 42%;      right: -6%;    width: clamp(120px, 14vw, 200px); transform: rotate(10deg); }
+.deco-h5 { bottom: -60px; left: -5%;     width: clamp(150px, 18vw, 240px); transform: rotate(8deg); }
+.deco-h6 { bottom: -40px; right: -7%;    width: clamp(140px, 16vw, 220px); transform: rotate(-11deg); }
+.deco-h7 { bottom: 18%;   left: 16%;     width: clamp(80px, 9vw, 130px);  transform: rotate(-16deg); }
+.deco-h8 { top: 6%;       right: 22%;    width: clamp(70px, 8vw, 110px);  transform: rotate(15deg); }
 
 /* Content decorations - sprinkled along the feed/widgets */
 .decoration-layer-content {
@@ -273,12 +272,12 @@ body::after {
     overflow: hidden;
     z-index: 1;
 }
-.deco-c1 { top: 2%;     right: -3%;  width: clamp(110px, 13vw, 190px); transform: rotate(7deg); }
-.deco-c2 { top: 16%;    left: -3%;   width: clamp(80px, 10vw, 150px); }
-.deco-c3 { top: 36%;    right: 0;    width: clamp(100px, 12vw, 170px); transform: rotate(-9deg); }
-.deco-c4 { top: 52%;    left: 1%;    width: clamp(80px, 10vw, 140px); }
-.deco-c5 { top: 70%;    right: -2%;  width: clamp(110px, 13vw, 180px); transform: rotate(11deg); }
-.deco-c6 { bottom: 4%;  left: -1%;   width: clamp(80px, 10vw, 150px); transform: rotate(-5deg); }
+.deco-c1 { top: 1%;     right: -7%;   width: clamp(120px, 14vw, 200px); transform: rotate(10deg); }
+.deco-c2 { top: 14%;    left: -8%;    width: clamp(100px, 12vw, 170px); transform: rotate(-7deg); }
+.deco-c3 { top: 34%;    right: -6%;   width: clamp(110px, 13vw, 190px); transform: rotate(-12deg); }
+.deco-c4 { top: 50%;    left: -7%;    width: clamp(100px, 12vw, 170px); transform: rotate(8deg); }
+.deco-c5 { top: 70%;    right: -8%;   width: clamp(120px, 14vw, 200px); transform: rotate(13deg); }
+.deco-c6 { bottom: 3%;  left: -6%;    width: clamp(100px, 12vw, 170px); transform: rotate(-9deg); }
 
 .content-wrap { position: relative; }
 
