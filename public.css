@@ -269,7 +269,6 @@ body::after {
     position: absolute;
     inset: 0;
     pointer-events: none;
-    overflow: hidden;
     z-index: 1;
 }
 .deco-c1 { top: 1%;     right: -7%;   width: clamp(120px, 14vw, 200px); transform: rotate(10deg); }
