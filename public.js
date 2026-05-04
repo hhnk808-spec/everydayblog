@@ -132,17 +132,43 @@ function matchesSearch(entry, q) {
         (entry.tags || []).some(t => t.toLowerCase().includes(q));
 }
 
+let activeFilter = 'today';
+
+function matchesFilter(date, entry) {
+    const today = todayStr();
+    const dateMs = new Date(date + 'T00:00:00').getTime();
+    const nowMs = new Date(today + 'T00:00:00').getTime();
+    switch (activeFilter) {
+        case 'today':     return date === today;
+        case 'week':      return dateMs >= nowMs - 7 * 86400000;
+        case 'month':     return dateMs >= nowMs - 30 * 86400000;
+        case 'favorites': return (entry.likes || 0) > 0;
+        case 'archive':
+        default:          return true;
+    }
+}
+
+const FILTER_EMPTY_MESSAGES = {
+    today:     'まだ今日の日記がありません — ARCHIVE で過去の日記を見てね',
+    week:      '今週の日記はまだありません',
+    month:     '今月の日記はまだありません',
+    favorites: 'まだ ♥ がついた日記はありません',
+    archive:   'まだ公開された日記はありません',
+};
+
 function renderFeed() {
     const dates = Object.keys(state.entries).sort().reverse();
     const published = dates.filter(d => state.entries[d].published);
-    const filtered = published.filter(d => matchesSearch(state.entries[d], state.query));
+    const filtered = published
+        .filter(d => matchesFilter(d, state.entries[d]))
+        .filter(d => matchesSearch(state.entries[d], state.query));
 
     feed.innerHTML = '';
     if (filtered.length === 0) {
         emptyState.hidden = false;
         emptyState.textContent = state.query
             ? '該当する日記が見つかりません'
-            : 'まだ公開された日記はありません';
+            : (FILTER_EMPTY_MESSAGES[activeFilter] || FILTER_EMPTY_MESSAGES.archive);
         return;
     }
     emptyState.hidden = true;
@@ -330,6 +356,18 @@ document.addEventListener('keydown', (e) => {
 searchInput.addEventListener('input', () => {
     state.query = searchInput.value.trim().toLowerCase();
     renderFeed();
+});
+
+document.querySelectorAll('.topbar-nav-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const f = link.dataset.filter;
+        if (!f) return;
+        activeFilter = f;
+        document.querySelectorAll('.topbar-nav-link').forEach(l => l.classList.remove('is-active'));
+        link.classList.add('is-active');
+        renderFeed();
+    });
 });
 
 function renderCalendar() {

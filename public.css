@@ -174,34 +174,54 @@ body::after {
     --rot: 8deg;
     animation: float-y-soft 6s ease-in-out infinite;
 }
-.deco-mascot {
-    bottom: 16%;
-    right: 6%;
-    font-size: 64px;
-    line-height: 1;
-    color: var(--marble-pink);
-    filter:
-        drop-shadow(3px 3px 0 var(--text-dark))
-        drop-shadow(0 6px 12px rgba(255, 158, 199, 0.6));
+/* SVG Y2K stamps */
+.stamp {
+    position: fixed;
+    pointer-events: none;
+    z-index: 3;
+    user-select: none;
+    filter: drop-shadow(3px 4px 0 rgba(0, 0, 0, 0.4));
+}
+.stamp-chrome-star {
+    top: 18%;
+    right: 3%;
+    width: 78px;
+    height: 78px;
+    --rot: -10deg;
+    animation: float-y 5s ease-in-out infinite;
+}
+.stamp-cyber-flower {
+    bottom: 14%;
+    left: 6%;
+    width: 88px;
+    height: 88px;
+    --rot: 8deg;
+    animation: float-y-soft 6s ease-in-out infinite;
+}
+.stamp-checker-heart {
+    top: 44%;
+    right: 13%;
+    width: 70px;
+    height: 64px;
     --rot: 14deg;
     animation: float-y 4.5s ease-in-out infinite;
 }
-.deco-star {
+.stamp-sparkle {
     top: 30%;
-    left: 4%;
-    font-size: 48px;
-    line-height: 1;
-    color: var(--accent-red);
-    filter: drop-shadow(2px 2px 0 var(--text-dark));
-    --rot: -6deg;
+    left: 5%;
+    width: 58px;
+    height: 58px;
+    --rot: -15deg;
     animation: float-y-soft 5.5s ease-in-out infinite;
 }
 
 @media (max-width: 900px) {
     .deco-heart { font-size: 70px; right: 3%; }
     .deco-bubble { width: 80px; height: 80px; }
-    .deco-mascot { font-size: 44px; }
-    .deco-star { font-size: 32px; }
+    .stamp-chrome-star { width: 56px; height: 56px; top: 12%; }
+    .stamp-cyber-flower { width: 64px; height: 64px; bottom: 8%; }
+    .stamp-checker-heart { width: 50px; height: 46px; right: 4%; top: 30%; }
+    .stamp-sparkle { width: 42px; height: 42px; }
 }
 
 /* ============================================================
@@ -317,7 +337,8 @@ body::after {
 .site-header {
     position: relative;
     z-index: 5;
-    padding: 60px 40px 40px;
+    padding: 80px 5vw;
+    min-height: 70vh;
     animation: fade-up 0.7s ease 0.2s both;
 }
 .hero {
@@ -333,7 +354,7 @@ body::after {
     position: relative;
     width: 100%;
     aspect-ratio: 4 / 5;
-    max-width: 500px;
+    max-width: 480px;
     border-radius: 20px;
     overflow: hidden;
     background: var(--bg-mist);
@@ -378,44 +399,62 @@ body::after {
 .hero-content {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    align-items: flex-start;
+    text-align: left;
+    gap: 12px;
 }
+.hero-content > * { margin: 0; }
+
 .hero-kicker {
-    font-family: 'VT323', monospace;
-    font-size: 16px;
+    font-family: 'VT323', 'DotGothic16', monospace;
+    font-size: clamp(12px, 1.4vw, 16px);
     color: var(--accent-red);
-    letter-spacing: 0.18em;
-    padding-bottom: 14px;
+    letter-spacing: 0.1em;
+    padding-bottom: 10px;
     border-bottom: 2px dashed var(--accent-red);
     text-transform: uppercase;
+    margin-bottom: 12px;
 }
 .hero-name {
-    font-family: 'VT323', 'Silkscreen', monospace;
-    font-size: clamp(72px, 11vw, 152px);
+    font-family: 'Press Start 2P', 'Silkscreen', 'DotGothic16', monospace;
+    font-size: clamp(60px, 8vw, 120px);
     font-weight: 400;
     color: var(--accent-red);
-    line-height: 0.9;
-    letter-spacing: -0.02em;
+    line-height: 1;
+    letter-spacing: 0.02em;
     text-shadow:
         4px 4px 0 var(--text-dark),
         -1px -1px 0 var(--white);
     word-break: break-word;
+    margin-bottom: 4px;
 }
 .hero-subtitle {
-    font-family: 'VT323', monospace;
-    font-size: clamp(20px, 2.4vw, 30px);
+    font-family: 'Press Start 2P', 'DotGothic16', monospace;
+    font-size: clamp(14px, 1.8vw, 20px);
     color: var(--accent-red);
-    letter-spacing: 0.04em;
-    line-height: 1.4;
+    letter-spacing: 0.05em;
+    line-height: 1.7;
+    text-shadow:
+        2px 2px 0 #000,
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
 }
 .hero-intro {
-    font-family: 'VT323', monospace;
-    font-size: 18px;
+    font-family: 'Press Start 2P', 'DotGothic16', monospace;
+    font-size: clamp(14px, 1.5vw, 18px);
     color: var(--accent-red);
-    line-height: 1.85;
+    line-height: 1.8;
     white-space: pre-wrap;
-    letter-spacing: 0.02em;
-    max-width: 540px;
+    letter-spacing: 0.05em;
+    max-width: 480px;
+    text-shadow:
+        2px 2px 0 #000,
+        -1px -1px 0 #000,
+        1px -1px 0 #000,
+        -1px 1px 0 #000,
+        1px 1px 0 #000;
 }
 
 /* ============================================================
