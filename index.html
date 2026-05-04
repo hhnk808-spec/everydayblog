@@ -14,6 +14,8 @@
         <div class="loader-text">LOADING<span class="loader-dots"><span>.</span><span>.</span><span>.</span></span></div>
     </div>
 
+    <div class="star-rain" id="starRain" aria-hidden="true"></div>
+
     <div class="deco deco-heart" aria-hidden="true">♥</div>
     <div class="deco deco-bubble" aria-hidden="true"></div>
 
@@ -81,9 +83,23 @@
 
     <header class="site-header">
         <div class="hero">
-            <div class="hero-photo-wrap">
-                <img id="heroPhoto" class="hero-photo" alt="プロフィール写真">
-                <div class="hero-photo-tag">PROFILE / 001</div>
+            <div class="profile-swiper" id="profileSwiper">
+                <div class="indicator-bar" id="indicatorBar"></div>
+                <div class="card-container">
+                    <button class="nav-button nav-prev" id="swiperPrev" aria-label="前の画像">‹</button>
+                    <button class="nav-button nav-next" id="swiperNext" aria-label="次の画像">›</button>
+                    <div class="profile-card" id="profileCard">
+                        <img id="heroPhoto" class="profile-image" alt="プロフィール写真" draggable="false">
+                        <div class="like-stamp stamp-like" id="stampLike">NEXT →</div>
+                        <div class="like-stamp stamp-nope" id="stampNope">← BACK</div>
+                        <div class="card-caption">
+                            <span class="caption-number" id="captionNumber">01 / 05</span>
+                            <span class="caption-text" id="captionText">PROFILE</span>
+                        </div>
+                        <div class="swipe-hint" id="swipeHint">← SWIPE →</div>
+                    </div>
+                </div>
+                <div class="dots" id="swiperDots"></div>
             </div>
             <div class="hero-content">
                 <div class="hero-title-block">

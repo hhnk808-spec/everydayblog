@@ -516,3 +516,238 @@ window.addEventListener('load', () => {
         if (loader) loader.classList.add('loaded');
     }, 900);
 });
+
+/* ============================================================
+   Profile Swiper (matching-app style)
+   ============================================================ */
+(function initSwiper() {
+    const profileImages = [
+        { src: 'images/profile/profile-01.jpg', caption: 'OFFICE' },
+        { src: 'images/profile/profile-02.jpg', caption: 'CAFE' },
+        { src: 'images/profile/profile-03.jpg', caption: 'MEETING' },
+        { src: 'images/profile/profile-04.jpg', caption: 'WEEKEND' },
+        { src: 'images/profile/profile-05.jpg', caption: 'TRAVEL' },
+    ];
+
+    const swiper = document.getElementById('profileSwiper');
+    if (!swiper) return;
+
+    const card = document.getElementById('profileCard');
+    const img = document.getElementById('heroPhoto');
+    const captionNumber = document.getElementById('captionNumber');
+    const captionText = document.getElementById('captionText');
+    const indicatorBar = document.getElementById('indicatorBar');
+    const dotsEl = document.getElementById('swiperDots');
+    const prevBtn = document.getElementById('swiperPrev');
+    const nextBtn = document.getElementById('swiperNext');
+    const stampLike = document.getElementById('stampLike');
+    const stampNope = document.getElementById('stampNope');
+
+    let currentIndex = 0;
+    let animating = false;
+    let dragStartX = null;
+    let dragStartY = null;
+    let dragMoved = false;
+    let dragDx = 0;
+
+    function fallbackSrc() {
+        return state.profile?.photo || DEFAULT_PHOTO;
+    }
+
+    function buildIndicators() {
+        indicatorBar.innerHTML = '';
+        dotsEl.innerHTML = '';
+        profileImages.forEach((_, i) => {
+            const seg = document.createElement('div');
+            seg.className = 'indicator-segment';
+            indicatorBar.appendChild(seg);
+            const dot = document.createElement('button');
+            dot.className = 'dot';
+            dot.type = 'button';
+            dot.setAttribute('aria-label', `${i + 1}枚目へ`);
+            dot.addEventListener('click', () => jumpTo(i));
+            dotsEl.appendChild(dot);
+        });
+    }
+
+    function refreshIndicators() {
+        Array.from(indicatorBar.children).forEach((seg, i) => {
+            seg.classList.remove('active', 'past');
+            if (i < currentIndex) seg.classList.add('past');
+            if (i === currentIndex) seg.classList.add('active');
+        });
+        Array.from(dotsEl.children).forEach((d, i) => {
+            d.classList.toggle('active', i === currentIndex);
+        });
+    }
+
+    function loadImage(index) {
+        const item = profileImages[index];
+        img.onerror = () => {
+            img.onerror = null;
+            img.src = fallbackSrc();
+        };
+        img.src = item.src;
+        captionNumber.textContent = `${String(index + 1).padStart(2, '0')} / ${String(profileImages.length).padStart(2, '0')}`;
+        captionText.textContent = item.caption;
+    }
+
+    function jumpTo(index, direction) {
+        if (animating || index === currentIndex) return;
+        const dir = direction !== undefined ? direction : (index > currentIndex ? 1 : -1);
+        animating = true;
+        card.classList.add(dir > 0 ? 'exit-left' : 'exit-right');
+        card.style.transform = '';
+        setTimeout(() => {
+            currentIndex = index;
+            loadImage(currentIndex);
+            refreshIndicators();
+            card.classList.remove('exit-left', 'exit-right');
+            card.classList.add(dir > 0 ? 'enter-from-right' : 'enter-from-left');
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    card.classList.remove('enter-from-right', 'enter-from-left');
+                    animating = false;
+                });
+            });
+        }, 320);
+    }
+
+    function next() {
+        jumpTo((currentIndex + 1) % profileImages.length, 1);
+    }
+    function prev() {
+        jumpTo((currentIndex - 1 + profileImages.length) % profileImages.length, -1);
+    }
+
+    nextBtn?.addEventListener('click', next);
+    prevBtn?.addEventListener('click', prev);
+
+    /* Drag / touch / click */
+    function pointerStart(x, y) {
+        if (animating) return;
+        dragStartX = x;
+        dragStartY = y;
+        dragMoved = false;
+        dragDx = 0;
+        card.classList.add('dragging');
+    }
+    function pointerMove(x, y) {
+        if (dragStartX === null) return;
+        const dx = x - dragStartX;
+        const dy = y - dragStartY;
+        if (!dragMoved && Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+        if (Math.abs(dy) > Math.abs(dx) * 1.4) return; // vertical scroll wins
+        dragMoved = true;
+        dragDx = dx;
+        card.style.transform = `translateX(${dx}px) rotate(${dx * 0.06}deg)`;
+        if (stampLike) stampLike.style.opacity = Math.min(1, Math.max(0, (-dx - 30) / 110));
+        if (stampNope) stampNope.style.opacity = Math.min(1, Math.max(0, (dx - 30) / 110));
+    }
+    function pointerEnd(x, y, isClick) {
+        if (dragStartX === null) return;
+        card.classList.remove('dragging');
+        const dx = dragDx;
+        if (stampLike) stampLike.style.opacity = '';
+        if (stampNope) stampNope.style.opacity = '';
+        if (!dragMoved && isClick) {
+            const rect = card.getBoundingClientRect();
+            const local = x - rect.left;
+            if (local < rect.width / 2) prev(); else next();
+        } else if (Math.abs(dx) > 90) {
+            if (dx < 0) next(); else prev();
+        } else {
+            card.style.transform = '';
+        }
+        dragStartX = null;
+        dragStartY = null;
+        dragMoved = false;
+        dragDx = 0;
+    }
+
+    card.addEventListener('mousedown', (e) => { pointerStart(e.clientX, e.clientY); });
+    window.addEventListener('mousemove', (e) => { if (dragStartX !== null) pointerMove(e.clientX, e.clientY); });
+    window.addEventListener('mouseup', (e) => { pointerEnd(e.clientX, e.clientY, true); });
+
+    card.addEventListener('touchstart', (e) => {
+        const t = e.touches[0];
+        pointerStart(t.clientX, t.clientY);
+    }, { passive: true });
+    card.addEventListener('touchmove', (e) => {
+        const t = e.touches[0];
+        pointerMove(t.clientX, t.clientY);
+    }, { passive: true });
+    card.addEventListener('touchend', (e) => {
+        const t = e.changedTouches[0];
+        pointerEnd(t.clientX, t.clientY, false);
+    });
+
+    /* Keyboard */
+    window.addEventListener('keydown', (e) => {
+        if (document.getElementById('readerModal') && !document.getElementById('readerModal').hidden) return;
+        if (e.target.matches('input, textarea')) return;
+        if (e.key === 'ArrowRight') next();
+        if (e.key === 'ArrowLeft') prev();
+    });
+
+    buildIndicators();
+    loadImage(currentIndex);
+    refreshIndicators();
+    /* re-load image when profile loads (fallback chain triggers) */
+    const observeProfile = setInterval(() => {
+        if (state.profile && state.profile.photo) {
+            // refresh in case fallback was needed
+            const cur = profileImages[currentIndex];
+            if (img.src && img.src.endsWith(cur.src)) return;
+            clearInterval(observeProfile);
+        }
+    }, 500);
+    setTimeout(() => clearInterval(observeProfile), 5000);
+})();
+
+/* ============================================================
+   Star Rain
+   ============================================================ */
+(function initStarRain() {
+    const container = document.getElementById('starRain');
+    if (!container) return;
+    const COUNT = window.matchMedia('(max-width: 768px)').matches ? 20 : 40;
+    const colors = ['#C8202A', '#FFFFFF', '#FFE600', '#FF6BB5'];
+    const types = ['star4', 'star5', 'sparkle', 'cross'];
+    const svgs = {
+        star4:   '<svg viewBox="0 0 100 100"><path d="M50,0 Q55,45 100,50 Q55,55 50,100 Q45,55 0,50 Q45,45 50,0 Z" fill="COLOR" stroke="#000" stroke-width="3"/></svg>',
+        star5:   '<svg viewBox="0 0 100 100"><path d="M50,5 L61,38 L95,38 L67,58 L78,92 L50,72 L22,92 L33,58 L5,38 L39,38 Z" fill="COLOR" stroke="#000" stroke-width="3"/></svg>',
+        sparkle: '<svg viewBox="0 0 100 100"><path d="M50,0 L54,46 L100,50 L54,54 L50,100 L46,54 L0,50 L46,46 Z" fill="COLOR" stroke="#000" stroke-width="2"/><circle cx="50" cy="50" r="6" fill="#FFFFFF" stroke="#000" stroke-width="2"/></svg>',
+        cross:   '<svg viewBox="0 0 100 100"><path d="M50,10 L55,45 L90,50 L55,55 L50,90 L45,55 L10,50 L45,45 Z" fill="COLOR" stroke="#000" stroke-width="2.5"/></svg>',
+    };
+
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < COUNT; i++) {
+        const left = Math.random() * 100;
+        const size = Math.random() * 20 + 12;
+        const duration = Math.random() * 8 + 6;
+        const delay = Math.random() * 10;
+        const opacity = Math.random() * 0.5 + 0.4;
+        const type = types[Math.floor(Math.random() * types.length)];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const spinSec = (Math.random() * 4 + 3).toFixed(2);
+
+        const wrap = document.createElement('div');
+        wrap.className = 'star-wrapper';
+        wrap.style.left = left + '%';
+        wrap.style.animationDuration = duration + 's';
+        wrap.style.animationDelay = '-' + delay + 's';
+        wrap.style.opacity = opacity;
+
+        const spin = document.createElement('div');
+        spin.className = 'star-spin';
+        spin.style.width = size + 'px';
+        spin.style.height = size + 'px';
+        spin.style.animationDuration = spinSec + 's';
+        spin.innerHTML = svgs[type].replace('COLOR', color);
+
+        wrap.appendChild(spin);
+        frag.appendChild(wrap);
+    }
+    container.appendChild(frag);
+})();
