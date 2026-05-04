@@ -271,12 +271,13 @@ body::after {
     pointer-events: none;
     z-index: 1;
 }
-.deco-c1 { top: 1%;     right: -7%;   width: clamp(120px, 14vw, 200px); transform: rotate(10deg); }
-.deco-c2 { top: 14%;    left: -8%;    width: clamp(100px, 12vw, 170px); transform: rotate(-7deg); }
-.deco-c3 { top: 34%;    right: -6%;   width: clamp(110px, 13vw, 190px); transform: rotate(-12deg); }
-.deco-c4 { top: 50%;    left: -7%;    width: clamp(100px, 12vw, 170px); transform: rotate(8deg); }
-.deco-c5 { top: 70%;    right: -8%;   width: clamp(120px, 14vw, 200px); transform: rotate(13deg); }
-.deco-c6 { bottom: 3%;  left: -6%;    width: clamp(100px, 12vw, 170px); transform: rotate(-9deg); }
+/* Stay fully inside the container — no negative offsets */
+.deco-c1 { top: 0;      right: 8px;   width: clamp(70px, 8vw, 110px); transform: rotate(10deg); }
+.deco-c2 { top: 12%;    left: 8px;    width: clamp(70px, 8vw, 110px); transform: rotate(-7deg); }
+.deco-c3 { top: 32%;    right: 8px;   width: clamp(70px, 8vw, 110px); transform: rotate(-12deg); }
+.deco-c4 { top: 48%;    left: 8px;    width: clamp(70px, 8vw, 110px); transform: rotate(8deg); }
+.deco-c5 { top: 68%;    right: 8px;   width: clamp(70px, 8vw, 110px); transform: rotate(13deg); }
+.deco-c6 { bottom: 8px; left: 8px;    width: clamp(70px, 8vw, 110px); transform: rotate(-9deg); }
 
 .content-wrap { position: relative; }
 
