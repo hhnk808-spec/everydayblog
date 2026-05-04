@@ -254,15 +254,16 @@ body::after {
     display: block;
     filter: drop-shadow(8px 12px 16px rgba(0, 0, 0, 0.25));
 }
-/* Hero decorations - sprinkled around */
-.deco-h1 { top: 6%;     left: -2%;   width: clamp(150px, 20vw, 260px); }
-.deco-h2 { top: 4%;     right: 6%;   width: clamp(110px, 14vw, 200px); transform: rotate(-8deg); }
-.deco-h3 { top: 38%;    left: -3%;   width: clamp(120px, 16vw, 220px); }
-.deco-h4 { top: 28%;    right: -1%;  width: clamp(130px, 16vw, 220px); }
-.deco-h5 { bottom: -50px; left: 24%; width: clamp(140px, 16vw, 220px); transform: rotate(6deg); }
-.deco-h6 { bottom: 4%;  right: 12%;  width: clamp(100px, 12vw, 180px); }
-.deco-h7 { top: 18%;    left: 38%;   width: clamp(70px, 9vw, 130px); transform: rotate(-12deg); }
-.deco-h8 { bottom: 14%; left: 2%;    width: clamp(90px, 11vw, 160px); }
+/* Hero decorations - sprinkled in safe zones (avoiding the right-column BLOG text) */
+/* Safe zones: left column (around photo), top edge (<12%), bottom edge (>78%), far-right edge */
+.deco-h1 { top: 2%;       left: -2%;    width: clamp(140px, 18vw, 230px); transform: rotate(-6deg); }
+.deco-h2 { top: 3%;       right: -2%;   width: clamp(100px, 12vw, 170px); transform: rotate(8deg); }
+.deco-h3 { top: 36%;      left: -3%;    width: clamp(110px, 14vw, 190px); }
+.deco-h4 { top: 18%;      left: 30%;    width: clamp(70px, 8vw, 110px);  transform: rotate(-14deg); }
+.deco-h5 { bottom: -50px; left: 22%;    width: clamp(130px, 16vw, 210px); transform: rotate(6deg); }
+.deco-h6 { bottom: 2%;    right: 4%;    width: clamp(110px, 13vw, 180px); transform: rotate(-9deg); }
+.deco-h7 { bottom: 18%;   left: 2%;     width: clamp(90px, 11vw, 150px); }
+.deco-h8 { top: 4%;       left: 38%;    width: clamp(60px, 7vw, 100px);  transform: rotate(12deg); }
 
 /* Content decorations - sprinkled along the feed/widgets */
 .decoration-layer-content {
