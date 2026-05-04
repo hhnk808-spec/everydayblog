@@ -105,7 +105,7 @@ function dayParts(s) {
 }
 
 function renderProfile() {
-    heroPhoto.src = state.profile.photo || DEFAULT_PHOTO;
+    /* heroPhoto.src is managed by the swiper; do not overwrite here */
     const rawName = state.profile.name || '名前未設定';
     heroName.textContent = rawName.replace(/\s*blog\s*$/i, '').trim() || rawName;
     heroIntro.textContent = state.profile.intro || '';
