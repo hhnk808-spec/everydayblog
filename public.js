@@ -282,9 +282,28 @@ function updateReaderLike() {
     readerLikeCount.textContent = entry.likes || 0;
 }
 
-readerLike.addEventListener('click', () => {
+function spawnHeartParticles(x, y) {
+    const count = 14;
+    for (let i = 0; i < count; i++) {
+        const p = document.createElement('span');
+        p.className = 'heart-particle';
+        p.textContent = ['♥', '♡', '✦', '★'][i % 4];
+        p.style.left = x + 'px';
+        p.style.top = y + 'px';
+        const angle = (i / count) * Math.PI * 2 + Math.random() * 0.4;
+        const dist = 60 + Math.random() * 70;
+        p.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+        p.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+        p.style.fontSize = (16 + Math.random() * 14) + 'px';
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 1000);
+    }
+}
+
+readerLike.addEventListener('click', (e) => {
     const entry = state.entries[state.currentDate];
     if (!entry) return;
+    const becomingLiked = !entry.liked;
     if (entry.liked) {
         entry.liked = false;
         entry.likes = Math.max(0, (entry.likes || 0) - 1);
@@ -296,6 +315,10 @@ readerLike.addEventListener('click', () => {
     updateReaderLike();
     renderFeed();
     renderPopular();
+    if (becomingLiked) {
+        const rect = readerLike.getBoundingClientRect();
+        spawnHeartParticles(rect.left + rect.width / 2, rect.top + rect.height / 2);
+    }
 });
 
 readerClose.addEventListener('click', closeReader);

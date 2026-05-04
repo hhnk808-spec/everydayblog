@@ -6,7 +6,7 @@
     <title>毎日日記</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Serif+Display:ital@0;1&family=IBM+Plex+Mono:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700;900&family=Noto+Serif+JP:wght@500;700;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700;900&family=Silkscreen:wght@400;700&family=VT323&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="public.css">
 </head>
 <body>
@@ -14,21 +14,58 @@
         <div class="loader-text">LOADING<span class="loader-dots"><span>.</span><span>.</span><span>.</span></span></div>
     </div>
 
+    <div class="deco deco-heart" aria-hidden="true">♥</div>
+    <div class="deco deco-bubble" aria-hidden="true"></div>
+    <div class="deco deco-mascot" aria-hidden="true">✿</div>
+    <div class="deco deco-star" aria-hidden="true">✦</div>
+
+    <header class="topbar">
+        <div class="topbar-left">
+            <button class="hamburger" aria-label="menu"><span></span><span></span><span></span></button>
+            <a class="topbar-logo" href="/">毎日日記<span class="topbar-logo-en">/ daily journal</span></a>
+        </div>
+        <nav class="topbar-nav">
+            <a class="topbar-nav-link is-active">TODAY</a>
+            <a class="topbar-nav-link">WEEK</a>
+            <a class="topbar-nav-link">MONTH</a>
+            <a class="topbar-nav-link">ARCHIVE</a>
+            <a class="topbar-nav-link">FAVORITES</a>
+        </nav>
+        <button class="topbar-search-btn" aria-label="search">⚲</button>
+    </header>
+
     <header class="site-header">
         <div class="hero">
             <div class="hero-photo-wrap">
                 <img id="heroPhoto" class="hero-photo" alt="プロフィール写真">
+                <div class="hero-photo-tag">PROFILE / 001</div>
             </div>
-            <h1 id="heroName" class="hero-name">名前未設定</h1>
-            <p id="heroIntro" class="hero-intro"></p>
-            <div id="heroSocials" class="hero-socials"></div>
+            <div class="hero-content">
+                <div class="hero-kicker">★ ISSUE 001 / 2026 / DAILY JOURNAL ★</div>
+                <h1 id="heroName" class="hero-name">DIARY</h1>
+                <div class="hero-subtitle">日々の記録、ひとつずつ。</div>
+                <p id="heroIntro" class="hero-intro"></p>
+                <div id="heroSocials" class="hero-socials"></div>
+            </div>
         </div>
     </header>
 
     <div class="content-wrap">
-        <aside class="content-side">
+        <main class="feed-wrap">
+            <div class="feed-toolbar">
+                <div class="feed-title-block">
+                    <span class="feed-title-num">NO. 02</span>
+                    <h2 class="feed-title">DIARY ARCHIVE</h2>
+                </div>
+                <input type="search" id="searchInput" class="feed-search" placeholder="SEARCH...">
+            </div>
+            <div id="feed" class="feed"></div>
+            <div id="emptyState" class="feed-empty" hidden>NO ENTRIES YET</div>
+        </main>
+
+        <aside class="widgets-row">
             <section class="side-block">
-                <h3 class="side-title">日付で見る</h3>
+                <h3 class="side-title">CALENDAR<span class="side-title-en">/ 日付</span></h3>
                 <div class="calendar">
                     <div class="calendar-head">
                         <button id="prevMonth" class="cal-nav" aria-label="前の月">‹</button>
@@ -38,27 +75,16 @@
                     <div class="calendar-grid" id="calGrid"></div>
                 </div>
             </section>
-        </aside>
 
-        <main class="feed-wrap">
-            <div class="feed-toolbar">
-                <h2 class="feed-title">毎日日記</h2>
-                <input type="search" id="searchInput" class="feed-search" placeholder="検索...">
-            </div>
-            <div id="feed" class="feed"></div>
-            <div id="emptyState" class="feed-empty" hidden>まだ公開された日記はありません</div>
-        </main>
-
-        <aside class="content-side">
             <section class="side-block">
-                <h3 class="side-title">人気の日記</h3>
+                <h3 class="side-title">POPULAR<span class="side-title-en">/ 人気の日記</span></h3>
                 <ul id="popularList" class="popular-list"></ul>
             </section>
         </aside>
     </div>
 
     <footer class="site-footer">
-        <span>— 毎日日記 —</span>
+        <span class="footer-text">★ DAILY JOURNAL / 毎日日記 / EST. 2026 ★</span>
     </footer>
 
     <div id="readerModal" class="reader-modal" hidden>
