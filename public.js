@@ -106,7 +106,8 @@ function dayParts(s) {
 
 function renderProfile() {
     heroPhoto.src = state.profile.photo || DEFAULT_PHOTO;
-    heroName.textContent = state.profile.name || '名前未設定';
+    const rawName = state.profile.name || '名前未設定';
+    heroName.textContent = rawName.replace(/\s*blog\s*$/i, '').trim() || rawName;
     heroIntro.textContent = state.profile.intro || '';
     heroIntro.style.display = state.profile.intro ? '' : 'none';
 

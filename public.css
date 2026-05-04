@@ -401,60 +401,76 @@ body::after {
     flex-direction: column;
     align-items: flex-start;
     text-align: left;
-    gap: 12px;
+    gap: 28px;
 }
 .hero-content > * { margin: 0; }
 
-.hero-kicker {
-    font-family: 'VT323', 'DotGothic16', monospace;
-    font-size: clamp(12px, 1.4vw, 16px);
+/* === Title block (3 lines) === */
+.hero-title-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+}
+.hero-eyebrow {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(10px, 1vw, 14px);
     color: var(--accent-red);
+    letter-spacing: 0.15em;
+    line-height: 1.4;
+}
+.hero-name-jp {
+    font-family: 'DotGothic16', monospace;
+    font-size: clamp(28px, 3.5vw, 48px);
+    color: var(--accent-red);
+    font-weight: 700;
     letter-spacing: 0.1em;
-    padding-bottom: 10px;
-    border-bottom: 2px dashed var(--accent-red);
-    text-transform: uppercase;
-    margin-bottom: 12px;
-}
-.hero-name {
-    font-family: 'Press Start 2P', 'Silkscreen', 'DotGothic16', monospace;
-    font-size: clamp(60px, 8vw, 120px);
-    font-weight: 400;
-    color: var(--accent-red);
     line-height: 1;
-    letter-spacing: 0.02em;
-    text-shadow:
-        4px 4px 0 var(--text-dark),
-        -1px -1px 0 var(--white);
-    word-break: break-word;
-    margin-bottom: 4px;
+    text-shadow: 3px 3px 0 #000;
+    white-space: nowrap;
 }
-.hero-subtitle {
-    font-family: 'Press Start 2P', 'DotGothic16', monospace;
-    font-size: clamp(14px, 1.8vw, 20px);
+.hero-title-main {
+    font-family: 'Press Start 2P', monospace;
+    font-size: clamp(72px, 10vw, 140px);
     color: var(--accent-red);
     letter-spacing: 0.05em;
-    line-height: 1.7;
-    text-shadow:
-        2px 2px 0 #000,
-        -1px -1px 0 #000,
-        1px -1px 0 #000,
-        -1px 1px 0 #000,
-        1px 1px 0 #000;
+    line-height: 1;
+    text-shadow: 5px 5px 0 #000;
+    white-space: nowrap;
+    font-weight: 400;
 }
-.hero-intro {
-    font-family: 'Press Start 2P', 'DotGothic16', monospace;
-    font-size: clamp(14px, 1.5vw, 18px);
+
+/* === Description block (tagline + divider + bio) === */
+.hero-description-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    max-width: 520px;
+}
+.hero-tagline {
+    font-family: 'DotGothic16', monospace;
+    font-size: clamp(16px, 1.8vw, 22px);
     color: var(--accent-red);
-    line-height: 1.8;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-shadow: 2px 2px 0 #000;
+}
+.hero-divider {
+    width: 80px;
+    height: 0;
+    border-top: 2px dashed var(--accent-red);
+    margin: 4px 0;
+}
+.hero-bio {
+    font-family: 'DotGothic16', monospace;
+    font-size: clamp(13px, 1.3vw, 16px);
+    color: var(--accent-red);
+    font-weight: 400;
+    line-height: 1.9;
+    letter-spacing: 0.03em;
+    text-shadow: none;
     white-space: pre-wrap;
-    letter-spacing: 0.05em;
-    max-width: 480px;
-    text-shadow:
-        2px 2px 0 #000,
-        -1px -1px 0 #000,
-        1px -1px 0 #000,
-        -1px 1px 0 #000,
-        1px 1px 0 #000;
 }
 
 /* ============================================================
