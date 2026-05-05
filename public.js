@@ -485,10 +485,11 @@ window.addEventListener('load', () => {
 (function initSwiper() {
     const profileImages = [
         { src: 'images/profile/profile-01.jpg', caption: 'OFFICE' },
-        { src: 'images/profile/profile-02.jpg', caption: 'CAFE' },
-        { src: 'images/profile/profile-03.jpg', caption: 'MEETING' },
-        { src: 'images/profile/profile-04.jpg', caption: 'WEEKEND' },
-        { src: 'images/profile/profile-05.jpg', caption: 'TRAVEL' },
+        { src: 'images/profile/profile-02.jpg', caption: 'ACTION' },
+        { src: 'images/profile/profile-03.jpg', caption: 'HOBBY' },
+        { src: 'images/profile/profile-04.jpg', caption: 'TASTE' },
+        { src: 'images/profile/profile-05.jpg', caption: 'SKILL' },
+        { src: 'images/profile/profile-06.jpg', caption: 'EDGE' },
     ];
 
     const swiper = document.getElementById('profileSwiper');
