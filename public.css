@@ -1432,4 +1432,7 @@ body::after {
     .feed-toolbar { flex-direction: column; align-items: stretch; gap: 14px; }
     .widgets-row { grid-template-columns: 1fr; gap: 18px; }
     .reader-card { padding: 50px 22px 40px; box-shadow: 6px 6px 0 var(--text-dark); }
+    .social-icon { width: 60px; height: 60px; box-shadow: 4px 4px 0 var(--text-dark); }
+    .social-icon svg { width: 28px; height: 28px; }
+    .hero-socials { gap: 14px; }
 }
