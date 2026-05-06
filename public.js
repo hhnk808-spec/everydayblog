@@ -301,24 +301,81 @@ function spawnHeartParticles(x, y) {
     }
 }
 
-readerLike.addEventListener('click', (e) => {
+/* ============================================================
+   Server-side like counter (abacus.jasoncameron.dev)
+   ============================================================ */
+const LIKES_NS = 'honokablog2026';
+const likeKey = (date) => `like_${date.replace(/-/g, '')}`;
+const likedFlag = (date) => `liked_${date.replace(/-/g, '')}`;
+
+async function fetchRemoteLikes(date) {
+    try {
+        const res = await fetch(`https://abacus.jasoncameron.dev/get/${LIKES_NS}/${likeKey(date)}`, { cache: 'no-store' });
+        if (!res.ok) return 0;
+        const data = await res.json();
+        return typeof data.value === 'number' ? data.value : 0;
+    } catch (e) {
+        return null;
+    }
+}
+
+async function incrementRemoteLikes(date) {
+    try {
+        const res = await fetch(`https://abacus.jasoncameron.dev/hit/${LIKES_NS}/${likeKey(date)}`, { cache: 'no-store' });
+        if (!res.ok) return null;
+        const data = await res.json();
+        return typeof data.value === 'number' ? data.value : null;
+    } catch (e) {
+        return null;
+    }
+}
+
+function hasLikedLocally(date) {
+    return localStorage.getItem(likedFlag(date)) === '1';
+}
+function markLikedLocally(date) {
+    localStorage.setItem(likedFlag(date), '1');
+}
+
+async function refreshAllLikes() {
+    const dates = Object.keys(state.entries).filter(d => state.entries[d].published);
+    if (dates.length === 0) return;
+    const results = await Promise.all(dates.map(d => fetchRemoteLikes(d)));
+    dates.forEach((d, i) => {
+        const remote = results[i];
+        if (remote !== null) state.entries[d].likes = remote;
+        state.entries[d].liked = hasLikedLocally(d);
+    });
+    renderFeed();
+    renderPopular();
+    if (state.currentDate && readerModal && !readerModal.hidden) {
+        updateReaderLike();
+    }
+}
+
+readerLike.addEventListener('click', async () => {
     const entry = state.entries[state.currentDate];
     if (!entry) return;
-    const becomingLiked = !entry.liked;
-    if (entry.liked) {
-        entry.liked = false;
-        entry.likes = Math.max(0, (entry.likes || 0) - 1);
-    } else {
-        entry.liked = true;
-        entry.likes = (entry.likes || 0) + 1;
-    }
-    persistEntries();
+    if (hasLikedLocally(state.currentDate)) return; /* one like per browser */
+
+    /* optimistic update */
+    entry.likes = (entry.likes || 0) + 1;
+    entry.liked = true;
+    markLikedLocally(state.currentDate);
     updateReaderLike();
     renderFeed();
     renderPopular();
-    if (becomingLiked) {
-        const rect = readerLike.getBoundingClientRect();
-        spawnHeartParticles(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+    const rect = readerLike.getBoundingClientRect();
+    spawnHeartParticles(rect.left + rect.width / 2, rect.top + rect.height / 2);
+
+    /* sync with server, replace optimistic count with authoritative one */
+    const newCount = await incrementRemoteLikes(state.currentDate);
+    if (newCount !== null) {
+        entry.likes = newCount;
+        updateReaderLike();
+        renderFeed();
+        renderPopular();
     }
 });
 
@@ -470,6 +527,7 @@ window.addEventListener('storage', (e) => {
         state.profile = loadProfile();
     }
     renderAll();
+    refreshAllLikes();
 })();
 
 window.addEventListener('load', () => {
