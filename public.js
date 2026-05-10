@@ -136,7 +136,9 @@ function matchesSearch(entry, q) {
 function renderFeed() {
     const dates = Object.keys(state.entries).sort().reverse();
     const published = dates.filter(d => state.entries[d].published);
-    const filtered = published.filter(d => matchesSearch(state.entries[d], state.query));
+    const filtered = published
+        .filter(d => matchesSearch(state.entries[d], state.query))
+        .slice(0, 3);
 
     feed.innerHTML = '';
     if (filtered.length === 0) {
