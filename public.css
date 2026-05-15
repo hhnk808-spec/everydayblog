@@ -16,6 +16,7 @@
     --marble-purple: #9b7bb8;
     --marble-pink: #ff9ec7;
     --marble-cyan: #88d9e8;
+    --shocking-pink: #ff1493;
     --text-dark: #1a1a1a;
     --text-soft: #3a3a3a;
     --line: rgba(26, 26, 26, 0.18);
@@ -117,6 +118,22 @@ body::after {
     display: flex;
     align-items: center;
     text-shadow: 3px 3px 0 var(--text-dark);
+}
+.loader-text::before,
+.loader-text::after {
+    content: "✦";
+    display: inline-block;
+    margin: 0 0.45em;
+    color: var(--shocking-pink);
+    text-shadow: 0 0 10px var(--shocking-pink), 0 0 18px rgba(255, 20, 147, 0.55);
+    animation: loader-sparkle-spin 1.6s linear infinite;
+    font-size: 0.85em;
+}
+.loader-text::after { animation-delay: -0.8s; }
+@keyframes loader-sparkle-spin {
+    0%   { transform: rotate(0deg) scale(0.85); }
+    50%  { transform: rotate(180deg) scale(1.2); }
+    100% { transform: rotate(360deg) scale(0.85); }
 }
 .loader-dots {
     display: inline-flex;
@@ -669,10 +686,15 @@ body::after {
     gap: 4px;
 }
 .feed-title-num {
-    font-family: 'VT323', monospace;
+    font-family: 'Share Tech Mono', 'VT323', monospace;
     font-size: 14px;
-    color: var(--accent-red);
     letter-spacing: 0.18em;
+    background: linear-gradient(135deg, #ff1493 0%, #ffd700 30%, #00ff7f 55%, #00bfff 80%, #ff69b4 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1px var(--text-dark);
+    paint-order: stroke fill;
 }
 .feed-title {
     font-family: 'VT323', 'Silkscreen', monospace;
@@ -743,10 +765,15 @@ body::after {
 .feed-card-day {
     font-family: 'VT323', monospace;
     font-size: 44px;
-    color: var(--accent-red);
     line-height: 0.9;
     font-weight: 400;
     letter-spacing: -0.03em;
+    background: linear-gradient(135deg, #ff1493 0%, #ffd700 30%, #00ff7f 55%, #00bfff 80%, #ff69b4 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1.5px var(--text-dark);
+    paint-order: stroke fill;
 }
 .feed-card-month {
     font-family: 'VT323', monospace;
@@ -830,8 +857,9 @@ body::after {
     transition: all 0.2s;
 }
 .feed-card-body a:hover, .reader-body a:hover {
-    background: var(--accent-red);
+    background: var(--shocking-pink);
     color: var(--white);
+    box-shadow: 0 0 12px rgba(255, 20, 147, 0.55);
 }
 
 .feed-card-meta {
@@ -1028,11 +1056,15 @@ body::after {
 .popular-rank {
     font-family: 'VT323', monospace;
     font-size: 32px;
-    color: var(--accent-red);
     line-height: 0.85;
-    text-shadow: 2px 2px 0 var(--text-dark);
     grid-row: 1 / span 2;
     align-self: start;
+    background: linear-gradient(135deg, #ff1493 0%, #ffd700 30%, #00ff7f 55%, #00bfff 80%, #ff69b4 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 1.5px var(--text-dark);
+    paint-order: stroke fill;
 }
 .popular-head {
     display: flex;
@@ -1315,20 +1347,21 @@ body::after {
     border-radius: 4px;
 }
 .counter-digit {
-    font-family: 'VT323', 'Press Start 2P', monospace;
+    font-family: 'Share Tech Mono', 'VT323', monospace;
     font-size: 28px;
-    font-weight: 700;
-    color: #00ff66;
-    background: rgba(0, 50, 0, 0.5);
+    font-weight: 400;
+    color: var(--shocking-pink);
+    background: rgba(40, 0, 20, 0.6);
     padding: 2px 8px;
     min-width: 24px;
     text-align: center;
     border-radius: 3px;
     line-height: 1;
+    letter-spacing: 0.06em;
     text-shadow:
-        0 0 4px #00ff66,
-        0 0 8px #00ff66,
-        0 0 12px rgba(0, 255, 102, 0.5);
+        0 0 4px var(--shocking-pink),
+        0 0 9px var(--shocking-pink),
+        0 0 16px rgba(255, 20, 147, 0.55);
 }
 .counter-label-right {
     font-family: 'DotGothic16', monospace;
@@ -1338,11 +1371,12 @@ body::after {
     text-shadow: 2px 2px 0 var(--text-dark);
 }
 .counter-label-right strong {
-    font-family: 'Press Start 2P', monospace;
-    color: #ffe600;
-    font-size: 14px;
+    font-family: 'Share Tech Mono', monospace;
+    color: var(--shocking-pink);
+    font-size: 16px;
     margin: 0 4px;
-    text-shadow: 2px 2px 0 var(--text-dark);
+    text-shadow: 0 0 8px var(--shocking-pink), 2px 2px 0 var(--text-dark);
+    letter-spacing: 0.04em;
 }
 
 @media (max-width: 640px) {
@@ -1435,4 +1469,41 @@ body::after {
     .social-icon { width: 60px; height: 60px; box-shadow: 4px 4px 0 var(--text-dark); }
     .social-icon svg { width: 28px; height: 28px; }
     .hero-socials { gap: 14px; }
+}
+
+/* ============================================================
+   Heisei retro accents
+   ============================================================ */
+@keyframes deco-twinkle {
+    0%, 100% { filter: drop-shadow(3px 4px 0 rgba(0,0,0,0.4)) brightness(1); }
+    50%      { filter: drop-shadow(3px 4px 0 rgba(0,0,0,0.4)) drop-shadow(0 0 14px var(--shocking-pink)) brightness(1.15); }
+}
+.deco-image { animation: deco-twinkle 3.8s ease-in-out infinite; }
+.deco-c1 .deco-image { animation-delay: -0.3s; }
+.deco-c2 .deco-image { animation-delay: -1.0s; }
+.deco-c3 .deco-image { animation-delay: -1.7s; }
+.deco-c4 .deco-image { animation-delay: -2.4s; }
+.deco-c5 .deco-image { animation-delay: -0.8s; }
+.deco-c6 .deco-image { animation-delay: -2.0s; }
+.deco-h2 .deco-image { animation-delay: -1.2s; }
+.deco-h4 .deco-image { animation-delay: -2.6s; }
+.deco-h6 .deco-image { animation-delay: -3.1s; }
+
+/* cursor star trail */
+.cursor-star {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9500;
+    font-size: 14px;
+    line-height: 1;
+    animation: cursor-star-fade 0.9s ease-out forwards;
+    will-change: transform, opacity;
+    text-shadow: 0 0 6px currentColor;
+}
+@keyframes cursor-star-fade {
+    0%   { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+    100% { opacity: 0; transform: translate(-50%, -150%) scale(0.3) rotate(180deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .cursor-star { display: none; }
 }

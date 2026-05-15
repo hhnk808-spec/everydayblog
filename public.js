@@ -826,3 +826,31 @@ window.addEventListener('load', () => {
     }
     container.appendChild(frag);
 })();
+
+/* ============================================================
+   Cursor star trail (Heisei retro accent)
+   ============================================================ */
+(function initCursorTrail() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    if (window.matchMedia('(hover: none)').matches) return; /* skip on touch */
+
+    const glyphs = ['✦', '✧', '★', '♥', '✿'];
+    const colors = ['#ff1493', '#ffd700', '#00bfff', '#ff69b4', '#c0c0c0'];
+    let lastSpawn = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        const now = performance.now();
+        if (now - lastSpawn < 60) return;
+        lastSpawn = now;
+
+        const s = document.createElement('span');
+        s.className = 'cursor-star';
+        s.textContent = glyphs[Math.floor(Math.random() * glyphs.length)];
+        s.style.left = e.clientX + (Math.random() * 14 - 7) + 'px';
+        s.style.top  = e.clientY + (Math.random() * 14 - 7) + 'px';
+        s.style.color = colors[Math.floor(Math.random() * colors.length)];
+        s.style.fontSize = (10 + Math.random() * 10) + 'px';
+        document.body.appendChild(s);
+        setTimeout(() => s.remove(), 900);
+    });
+})();
