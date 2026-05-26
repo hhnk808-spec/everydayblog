@@ -265,9 +265,9 @@
       "tags": [],
       "likes": 0,
       "liked": false,
-      "published": false,
+      "published": true,
       "images": [],
-      "updatedAt": "2026-05-26T15:58:45.789Z"
+      "updatedAt": "2026-05-26T16:25:40.848Z"
     },
     "2026-05-25": {
       "title": "夜しか日記が書けない",
@@ -304,5 +304,5 @@
       "service": "https://caremaru.co.jp/"
     }
   },
-  "exportedAt": "2026-05-26T16:23:03.283Z"
+  "exportedAt": "2026-05-26T16:25:43.766Z"
 }
