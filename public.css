@@ -58,10 +58,7 @@ body {
     font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    background:
-        linear-gradient(135deg, var(--bg-green) 0%, var(--bg-yellow) 100%);
-    background-size: 200% 200%;
-    animation: shift-bg 30s ease infinite;
+    background: #ffff00;
     background-attachment: fixed;
     overflow-x: hidden;
     position: relative;
