@@ -84,6 +84,10 @@ let state = {
     profileEditing: false,
 };
 
+let autoSaveTimer = null;
+let lastAutoSavedSignature = '';
+let suppressAutoSave = false;
+
 function todayStr() {
     const d = new Date();
     return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
@@ -239,7 +243,9 @@ photoInput.addEventListener('change', (e) => {
 });
 
 /* ===== Editor ===== */
-function loadIntoEditor(date) {
+function loadIntoEditor(date, { flush = true } = {}) {
+    if (flush) flushAutoSave();
+    suppressAutoSave = true;
     state.currentDate = date;
     dateInput.value = date;
     const entry = state.entries[date];
@@ -269,6 +275,8 @@ function loadIntoEditor(date) {
     updateCharCount();
     renderEntries();
     renderCalendar();
+    setSavedSignature(date);
+    suppressAutoSave = false;
 }
 
 function renderTags() {
@@ -280,7 +288,11 @@ function renderTags() {
         const x = document.createElement('button');
         x.textContent = '×';
         x.title = '削除';
-        x.onclick = () => { state.draftTags.splice(idx, 1); renderTags(); };
+        x.onclick = () => {
+            state.draftTags.splice(idx, 1);
+            renderTags();
+            scheduleAutoSave();
+        };
         chip.appendChild(x);
         tagChips.appendChild(chip);
     });
@@ -301,13 +313,41 @@ function updateCharCount() {
     charCount.textContent = `${entryInput.value.length} 文字`;
 }
 
-function saveCurrent() {
-    const date = dateInput.value;
+function hasDraftContent() {
+    return !!(
+        titleInput.value.trim()
+        || entryInput.value.trim()
+        || state.draftTags.length
+        || state.draftImages.length
+    );
+}
+
+function getDraftSignature(date = dateInput.value) {
+    return JSON.stringify({
+        date,
+        title: titleInput.value.trim(),
+        content: entryInput.value,
+        tags: state.draftTags,
+        likes: state.draftLikes,
+        liked: state.draftLiked,
+        published: state.draftPublished,
+        images: state.draftImages,
+    });
+}
+
+function setSavedSignature(date = dateInput.value) {
+    lastAutoSavedSignature = getDraftSignature(date);
+}
+
+function saveCurrent({ silent = false, date = dateInput.value } = {}) {
     const content = entryInput.value;
-    if (!date) { statusText.textContent = '日付を入れてね'; return; }
-    if (!content.trim() && state.draftTags.length === 0 && !titleInput.value.trim()) {
-        statusText.textContent = '題名・本文・タグのいずれかを入れてから保存';
-        return;
+    if (!date) {
+        if (!silent) statusText.textContent = '日付を入れてね';
+        return false;
+    }
+    if (!hasDraftContent()) {
+        if (!silent) statusText.textContent = '題名・本文・タグのいずれかを入れてから保存';
+        return false;
     }
     state.entries[date] = {
         title: titleInput.value.trim(),
@@ -321,9 +361,33 @@ function saveCurrent() {
     };
     persistEntries();
     state.currentDate = date;
-    statusText.textContent = `保存しました — ${formatDateLong(date)}`;
+    setSavedSignature(date);
+    statusText.textContent = silent
+        ? `自動保存しました — ${new Date().toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' })}`
+        : `保存しました — ${formatDateLong(date)}`;
     renderEntries();
     renderCalendar();
+    return true;
+}
+
+function autoSaveCurrent(date = dateInput.value) {
+    if (suppressAutoSave || !hasDraftContent()) return;
+    const signature = getDraftSignature(date);
+    if (signature === lastAutoSavedSignature) return;
+    saveCurrent({ silent: true, date });
+}
+
+function scheduleAutoSave() {
+    if (suppressAutoSave) return;
+    clearTimeout(autoSaveTimer);
+    if (!hasDraftContent()) return;
+    statusText.textContent = '自動保存待ち...';
+    autoSaveTimer = setTimeout(autoSaveCurrent, 700);
+}
+
+function flushAutoSave(date = dateInput.value) {
+    clearTimeout(autoSaveTimer);
+    autoSaveCurrent(date);
 }
 
 function deleteCurrent() {
@@ -338,14 +402,12 @@ function deleteCurrent() {
 publishBtn.addEventListener('click', () => {
     state.draftPublished = !state.draftPublished;
     renderPublish();
-    if (state.entries[state.currentDate]) {
-        state.entries[state.currentDate].published = state.draftPublished;
-        persistEntries();
-        renderEntries();
-        statusText.textContent = state.draftPublished
+    const saved = saveCurrent({ silent: true });
+    statusText.textContent = saved
+        ? (state.draftPublished
             ? `公開しました — ${formatDateLong(state.currentDate)}`
-            : `下書きに戻しました — ${formatDateLong(state.currentDate)}`;
-    }
+            : `下書きに戻しました — ${formatDateLong(state.currentDate)}`)
+        : `公開設定: ${state.draftPublished ? '公開中' : '下書き'}`;
 });
 
 likeBtn.addEventListener('click', () => {
@@ -357,12 +419,7 @@ likeBtn.addEventListener('click', () => {
         state.draftLikes += 1;
     }
     renderLike();
-    if (state.entries[state.currentDate]) {
-        state.entries[state.currentDate].liked = state.draftLiked;
-        state.entries[state.currentDate].likes = state.draftLikes;
-        persistEntries();
-        renderEntries();
-    }
+    scheduleAutoSave();
 });
 
 tagInput.addEventListener('keydown', (e) => {
@@ -372,16 +429,25 @@ tagInput.addEventListener('keydown', (e) => {
         if (v && !state.draftTags.includes(v)) {
             state.draftTags.push(v);
             renderTags();
+            scheduleAutoSave();
         }
         tagInput.value = '';
     } else if (e.key === 'Backspace' && !tagInput.value && state.draftTags.length) {
         state.draftTags.pop();
         renderTags();
+        scheduleAutoSave();
     }
 });
 
-entryInput.addEventListener('input', updateCharCount);
-dateInput.addEventListener('change', () => loadIntoEditor(dateInput.value));
+titleInput.addEventListener('input', scheduleAutoSave);
+entryInput.addEventListener('input', () => {
+    updateCharCount();
+    scheduleAutoSave();
+});
+dateInput.addEventListener('change', () => {
+    flushAutoSave(state.currentDate);
+    loadIntoEditor(dateInput.value, { flush: false });
+});
 saveBtn.addEventListener('click', saveCurrent);
 deleteBtn.addEventListener('click', deleteCurrent);
 newBtn.addEventListener('click', () => loadIntoEditor(todayStr()));
@@ -390,6 +456,10 @@ entryInput.addEventListener('keydown', (e) => {
         e.preventDefault();
         saveCurrent();
     }
+});
+window.addEventListener('beforeunload', () => flushAutoSave());
+document.addEventListener('visibilitychange', () => {
+    if (document.hidden) flushAutoSave();
 });
 
 /* ===== Search ===== */
@@ -535,6 +605,7 @@ function renderImages() {
             e.stopPropagation();
             state.draftImages.splice(idx, 1);
             renderImages();
+            scheduleAutoSave();
         };
         wrap.appendChild(img);
         wrap.appendChild(rm);
@@ -578,7 +649,7 @@ imageInput.addEventListener('change', async (e) => {
         }
     }
     renderImages();
-    statusText.textContent = `${files.length}枚追加 — 保存ボタンで反映`;
+    scheduleAutoSave();
     imageInput.value = '';
 });
 
@@ -594,6 +665,7 @@ function buildEmojiPicker() {
         b.onclick = (ev) => {
             ev.preventDefault();
             insertAtCursor(entryInput, e);
+            scheduleAutoSave();
             emojiPicker.hidden = true;
         };
         emojiPicker.appendChild(b);
@@ -642,9 +714,93 @@ exportBtn.addEventListener('click', () => {
     statusText.textContent = 'data.json をダウンロードしました — リポジトリのルートに置いて push';
 });
 
+/* ===== Import / restore from data.json ===== */
+const importBtn = document.getElementById('importBtn');
+
+async function fetchDataJson() {
+    const res = await fetch('data.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('data.json が見つかりません (' + res.status + ')');
+    return res.json();
+}
+
+// Merge data.json into current state.
+// overwrite=true : data.json wins on same date (local-only dates are kept).
+// overwrite=false: local wins on same date (used for silent auto-seed).
+// Returns the number of entries in data.json.
+function mergeImported(data, { overwrite }) {
+    const imported = (data && data.entries) || {};
+    state.entries = overwrite
+        ? { ...state.entries, ...imported }
+        : { ...imported, ...state.entries };
+    persistEntries();
+
+    if (data && data.profile) {
+        const p = state.profile;
+        const localEmpty = !p.name && !p.intro && !p.photo
+            && (!p.socials || Object.keys(p.socials).length === 0);
+        if (overwrite || localEmpty) {
+            state.profile = {
+                name: '', intro: '', photo: '', socials: {},
+                ...data.profile,
+                socials: { ...(data.profile.socials || {}) },
+            };
+            persistProfile();
+            renderProfile();
+        }
+    }
+    return Object.keys(imported).length;
+}
+
+function refreshAfterImport() {
+    loadIntoEditor(state.currentDate); // re-renders entries, calendar and editor
+}
+
+// Auto-seed when this browser has never stored any diary (fresh browser/origin).
+// data.json (committed to the repo) is the source of truth in that case.
+async function autoSeedIfEmpty() {
+    const untouched = localStorage.getItem(STORAGE_KEY) === null
+        && localStorage.getItem(LEGACY_KEY) === null;
+    if (!untouched) return;
+    try {
+        const data = await fetchDataJson();
+        const count = mergeImported(data, { overwrite: false });
+        if (count > 0) {
+            refreshAfterImport();
+            statusText.textContent = `data.json から ${count} 件を復元しました`;
+        }
+    } catch (e) {
+        // Silent: e.g. opened via file:// or data.json not served. Manual import still available.
+        console.warn('auto-seed skipped:', e.message);
+    }
+}
+
+importBtn.addEventListener('click', async () => {
+    statusText.textContent = 'data.json を読み込み中...';
+    try {
+        const data = await fetchDataJson();
+        const importedCount = data.entries ? Object.keys(data.entries).length : 0;
+        const localCount = Object.keys(state.entries).length;
+        if (localCount > 0) {
+            const ok = confirm(
+                `現在このブラウザに ${localCount} 件の日記があります。\n` +
+                `data.json の ${importedCount} 件を取り込みます。\n` +
+                `同じ日付は data.json の内容で上書きされます（ローカルだけの日付は残ります）。\n\n続けますか？`
+            );
+            if (!ok) { statusText.textContent = '取り込みをキャンセルしました'; return; }
+        }
+        const count = mergeImported(data, { overwrite: true });
+        refreshAfterImport();
+        statusText.textContent = `data.json から取り込みました（${count} 件）`;
+    } catch (e) {
+        statusText.textContent = '取り込み失敗: ' + e.message;
+        console.error(e);
+    }
+});
+
 /* ===== Init ===== */
 state.entries = loadEntries();
 state.profile = loadProfile();
 buildEmojiPicker();
 renderProfile();
 loadIntoEditor(todayStr());
+autoSeedIfEmpty();
