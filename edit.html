@@ -7,7 +7,7 @@
     <link rel="icon" href="/favicon.ico?v=20260629" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Shippori+Mincho:wght@500;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Shippori+Mincho:wght@500;700&family=Zen+Maru+Gothic:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -101,6 +101,11 @@
                 <div class="paper">
                     <input type="text" id="titleInput" class="title-input" placeholder="題名 (任意)" maxlength="80">
                     <textarea id="entryInput" class="entry-input" placeholder="今日の出来事、決めたこと、気づきを綴る..." spellcheck="false"></textarea>
+                </div>
+
+                <div class="summary-tools">
+                    <button id="expandSummaryBtn" class="summary-btn" type="button">3行から日記化</button>
+                    <span class="summary-hint">本文欄に3行サマリを書いて押すと、過去日記の流れに寄せて下書きします</span>
                 </div>
 
                 <div class="image-strip" id="imageStrip">

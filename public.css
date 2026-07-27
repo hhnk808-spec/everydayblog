@@ -833,7 +833,7 @@ body::after {
 }
 
 .feed-card-body {
-    font-family: 'VT323', 'Noto Sans JP', monospace;
+    font-family: 'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
     font-size: 15px;
     color: var(--text-soft);
     line-height: 1.7;
@@ -843,7 +843,7 @@ body::after {
     overflow: hidden;
     white-space: pre-wrap;
     word-wrap: break-word;
-    letter-spacing: 0.02em;
+    letter-spacing: 0;
 }
 .feed-card-body a, .reader-body a {
     color: var(--accent-red);
@@ -1220,14 +1220,14 @@ body::after {
     border-radius: 10px;
 }
 .reader-body {
-    font-family: 'VT323', 'Noto Sans JP', monospace;
+    font-family: 'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
     font-size: 18px;
     color: var(--text-dark);
     line-height: 1.95;
     white-space: pre-wrap;
     word-wrap: break-word;
     font-weight: 400;
-    letter-spacing: 0.02em;
+    letter-spacing: 0;
 }
 .reader-tags {
     margin-top: 36px;
@@ -1972,13 +1972,13 @@ body::after {
 .feed-card-title,
 .popular-preview,
 .reader-title {
-    font-family: 'DotGothic16', 'Noto Sans JP', monospace;
+    font-family: 'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
     font-weight: 700;
 }
 
 .feed-card-body,
 .reader-body {
-    font-family: 'DotGothic16', 'Noto Sans JP', monospace;
+    font-family: 'Noto Sans JP', 'Hiragino Sans', 'Hiragino Kaku Gothic ProN', sans-serif;
     font-size: 16px;
     letter-spacing: 0;
 }

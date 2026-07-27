@@ -7,21 +7,21 @@ const SOCIAL_LABELS = {
     twitter: 'X',
     note: 'note',
     facebook: 'Facebook',
-    hp: 'HP',
+    hp: 'MINDX',
     service: 'サービス',
 };
 const SOCIAL_COLORS = {
     twitter: '#000000',
     note: '#41c9b4',
     facebook: '#1877f2',
-    hp: '#2f5b3c',
+    hp: '#28b7c9',
     service: '#a86b3c',
 };
 const SOCIAL_SVG = {
     twitter: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
     note: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="6" fill="currentColor"/><path d="M7 17V8h2.4l4.5 5.8h.1V8h2.2v9h-2.4l-4.5-5.8H9.2V17z" fill="#fff"/></svg>',
     facebook: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
-    hp: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2 a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+    hp: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="MINDX" role="img"><path d="M4 4 L10.6 12 L4 20 H8.8 L15.4 12 L8.8 4 Z" fill="#050505"/><path d="M10.2 20 L20 3 L14.7 3 L4.9 20 Z" fill="currentColor"/></svg>',
     service: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
 };
 const EMOJI_LIST = ['😊','😄','🥰','😂','😴','😅','😎','🤔','💪','✨','🎉','🌱','🌸','🌷','🌿','🍀','☀️','⛅','🌙','⭐','💡','📝','📚','☕','🍵','🍰','💼','📈','🎯','❤️','💚','🔥','⚡','🙌','👏','🎀','🌈','🥳','🙏','🤝'];
@@ -30,6 +30,7 @@ const dateInput = document.getElementById('dateInput');
 const titleInput = document.getElementById('titleInput');
 const entryInput = document.getElementById('entryInput');
 const saveBtn = document.getElementById('saveBtn');
+const expandSummaryBtn = document.getElementById('expandSummaryBtn');
 const deleteBtn = document.getElementById('deleteBtn');
 const newBtn = document.getElementById('newBtn');
 const likeBtn = document.getElementById('likeBtn');
@@ -130,11 +131,20 @@ function persistEntries() {
 }
 function loadProfile() {
     const raw = localStorage.getItem(PROFILE_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) return normalizeProfile(JSON.parse(raw));
     return { name: '', intro: '', photo: '', socials: {} };
 }
 function persistProfile() {
     localStorage.setItem(PROFILE_KEY, JSON.stringify(state.profile));
+}
+function normalizeProfile(profile) {
+    const normalized = { name: '', intro: '', photo: '', socials: {}, ...(profile || {}) };
+    normalized.socials = { ...(normalized.socials || {}) };
+    if (normalized.socials.hp === 'https://mindx.jp/' || normalized.socials.hp === 'https://mindx.jp') {
+        normalized.socials.hp = 'https://promaru.jp/';
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(normalized));
+    }
+    return normalized;
 }
 
 /* ===== Date helpers ===== */
@@ -313,6 +323,86 @@ function updateCharCount() {
     charCount.textContent = `${entryInput.value.length} 文字`;
 }
 
+function cleanSummaryLine(line) {
+    return (line || '')
+        .trim()
+        .replace(/^[・\-*◆◇■□\d０-９]+[.)．、\s]*/, '')
+        .replace(/\s+/g, ' ');
+}
+
+function ensureSentence(line) {
+    const text = cleanSummaryLine(line);
+    if (!text) return '';
+    return /[。！？!?）)\]」』]$/.test(text) ? text : `${text}。`;
+}
+
+function sentenceWithoutPeriod(line) {
+    return cleanSummaryLine(line).replace(/[。！？!?]+$/, '');
+}
+
+function pickFromPastDiary(candidates, fallback) {
+    const contents = Object.values(state.entries)
+        .map(entry => entry.content || '')
+        .filter(content => content.length > 120);
+    const found = candidates.find(candidate => contents.some(content => content.includes(candidate)));
+    return found || fallback;
+}
+
+function buildDiaryFromSummary(lines) {
+    const topic = sentenceWithoutPeriod(lines[0]);
+    const detail = sentenceWithoutPeriod(lines[1] || '');
+    const feeling = sentenceWithoutPeriod(lines[2] || '');
+    const extra = lines.slice(3).map(sentenceWithoutPeriod).filter(Boolean);
+    const closing = pickFromPastDiary(
+        ['Why now', '解像度', '一次情報', '意思決定', '日々精進したい'],
+        '意思決定'
+    );
+
+    const paragraphs = [];
+    paragraphs.push(`今日は${topic ? `、${topic}` : 'いくつか考えたこと'}について書く。`);
+
+    if (detail) {
+        paragraphs.push(`${ensureSentence(detail)}一見すると日常のひとつの出来事に見えるが、経営をしていると、こういう小さな違和感や手応えの中にかなり重要なヒントが隠れている。`);
+    }
+
+    if (feeling) {
+        paragraphs.push(`${ensureSentence(feeling)}この感情をもう少し分解すると、単なる気分ではなく、自分が何に価値を置いていて、どこに課題を感じているのかが見えてくる。感情はふわっとしているようで、実はかなり精度の高い事業センサーだと思う。`);
+    }
+
+    if (extra.length) {
+        paragraphs.push(`${extra.map(ensureSentence).join('')}ここから考えるべきなのは、目の前の事象をただの出来事で終わらせず、次の打ち手に変換できるかどうかだと思う。`);
+    }
+
+    const finalFrame = closing === '意思決定'
+        ? '結局、経営は毎日の小さな意思決定の積み重ねでしかない。だからこそ、違和感を放置せず、言語化して、次の行動に変えていきたい。'
+        : `今日の学びは、${closing}をもっと高める必要があるということ。抽象度を上げて考えつつ、最後はちゃんと行動に落とし込む。この往復をもっと速くしていきたい。`;
+    paragraphs.push(finalFrame);
+    return paragraphs.join('\n\n');
+}
+
+function expandSummaryToDiary() {
+    const lines = entryInput.value
+        .split(/\n+/)
+        .map(cleanSummaryLine)
+        .filter(Boolean);
+
+    if (lines.length < 2) {
+        statusText.textContent = '本文欄に2〜4行くらいのサマリを書いてから押してね';
+        return;
+    }
+    if (lines.length > 5 && !confirm('本文が5行以上あります。いまの本文を日記文に整えて置き換えますか？')) {
+        return;
+    }
+
+    if (!titleInput.value.trim()) {
+        titleInput.value = sentenceWithoutPeriod(lines[0]).slice(0, 28);
+    }
+    entryInput.value = buildDiaryFromSummary(lines);
+    updateCharCount();
+    scheduleAutoSave();
+    statusText.textContent = `論理と深さを足した日記文に整えました`;
+}
+
 function hasDraftContent() {
     return !!(
         titleInput.value.trim()
@@ -449,6 +539,7 @@ dateInput.addEventListener('change', () => {
     loadIntoEditor(dateInput.value, { flush: false });
 });
 saveBtn.addEventListener('click', saveCurrent);
+expandSummaryBtn.addEventListener('click', expandSummaryToDiary);
 deleteBtn.addEventListener('click', deleteCurrent);
 newBtn.addEventListener('click', () => loadIntoEditor(todayStr()));
 entryInput.addEventListener('keydown', (e) => {
@@ -739,11 +830,11 @@ function mergeImported(data, { overwrite }) {
         const localEmpty = !p.name && !p.intro && !p.photo
             && (!p.socials || Object.keys(p.socials).length === 0);
         if (overwrite || localEmpty) {
-            state.profile = {
+            state.profile = normalizeProfile({
                 name: '', intro: '', photo: '', socials: {},
                 ...data.profile,
                 socials: { ...(data.profile.socials || {}) },
-            };
+            });
             persistProfile();
             renderProfile();
         }

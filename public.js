@@ -5,21 +5,21 @@ const SOCIAL_LABELS = {
     twitter: 'X',
     note: 'note',
     facebook: 'Facebook',
-    hp: 'HP',
+    hp: 'MINDX',
     service: 'サービス',
 };
 const SOCIAL_COLORS = {
     twitter: '#000000',
     note: '#41c9b4',
     facebook: '#1877f2',
-    hp: '#2f5b3c',
+    hp: '#28b7c9',
     service: '#a86b3c',
 };
 const SOCIAL_SVG = {
     twitter: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>',
     note: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect width="24" height="24" rx="6" fill="currentColor"/><path d="M7 17V8h2.4l4.5 5.8h.1V8h2.2v9h-2.4l-4.5-5.8H9.2V17z" fill="#fff"/></svg>',
     facebook: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>',
-    hp: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2 a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>',
+    hp: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="MINDX" role="img"><path d="M4 4 L10.6 12 L4 20 H8.8 L15.4 12 L8.8 4 Z" fill="#050505"/><path d="M10.2 20 L20 3 L14.7 3 L4.9 20 Z" fill="currentColor"/></svg>',
     service: '<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
 };
 
@@ -85,7 +85,17 @@ function loadEntries() {
     return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
 }
 function loadProfile() {
-    return JSON.parse(localStorage.getItem(PROFILE_KEY) || '{"name":"","intro":"","photo":"","socials":{}}');
+    const profile = JSON.parse(localStorage.getItem(PROFILE_KEY) || '{"name":"","intro":"","photo":"","socials":{}}');
+    return normalizeProfile(profile);
+}
+function normalizeProfile(profile) {
+    const normalized = { name: '', intro: '', photo: '', socials: {}, ...(profile || {}) };
+    normalized.socials = { ...(normalized.socials || {}) };
+    if (normalized.socials.hp === 'https://mindx.jp/' || normalized.socials.hp === 'https://mindx.jp') {
+        normalized.socials.hp = 'https://promaru.jp/';
+        localStorage.setItem(PROFILE_KEY, JSON.stringify(normalized));
+    }
+    return normalized;
 }
 function persistEntries() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(state.entries));
@@ -502,7 +512,7 @@ async function loadFromDataJson() {
         const data = await res.json();
         return {
             entries: data.entries || {},
-            profile: data.profile || { name: '', intro: '', photo: '', socials: {} },
+            profile: normalizeProfile(data.profile || { name: '', intro: '', photo: '', socials: {} }),
         };
     } catch (e) {
         return null;
