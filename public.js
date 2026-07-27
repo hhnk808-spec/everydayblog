@@ -91,8 +91,21 @@ function loadProfile() {
 function normalizeProfile(profile) {
     const normalized = { name: '', intro: '', photo: '', socials: {}, ...(profile || {}) };
     normalized.socials = { ...(normalized.socials || {}) };
-    if (normalized.socials.hp === 'https://mindx.jp/' || normalized.socials.hp === 'https://mindx.jp') {
-        normalized.socials.hp = 'https://promaru.jp/';
+    let changed = false;
+    if (normalized.socials.hp === 'https://promaru.jp/' || normalized.socials.hp === 'https://promaru.jp') {
+        normalized.socials.hp = 'https://mindx.jp/';
+        changed = true;
+    }
+    if (
+        normalized.socials.service === 'https://caremaru.co.jp/' ||
+        normalized.socials.service === 'https://caremaru.co.jp' ||
+        normalized.socials.service === 'https://mindx.jp/' ||
+        normalized.socials.service === 'https://mindx.jp'
+    ) {
+        normalized.socials.service = 'https://promaru.jp/';
+        changed = true;
+    }
+    if (changed) {
         localStorage.setItem(PROFILE_KEY, JSON.stringify(normalized));
     }
     return normalized;
