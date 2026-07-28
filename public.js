@@ -573,6 +573,7 @@ window.addEventListener('load', () => {
         { src: 'images/profile/profile-04.jpg', caption: 'TASTE' },
         { src: 'images/profile/profile-05.jpg', caption: 'SKILL' },
         { src: 'images/profile/profile-06.jpg', caption: 'EDGE' },
+        { src: 'images/profile/profile-07.jpg', caption: 'VISION' },
     ];
 
     const swiper = document.getElementById('profileSwiper');
