@@ -643,7 +643,8 @@ body::after {
     transition: all 0.2s ease;
     box-shadow: 3px 3px 0 var(--text-dark);
 }
-.social-icon svg { width: 19px; height: 19px; display: block; }
+.social-icon svg,
+.social-icon img { width: 19px; height: 19px; display: block; object-fit: contain; }
 .social-icon:hover {
     background: var(--accent-red);
     color: var(--white);
@@ -1464,7 +1465,8 @@ body::after {
     .widgets-row { grid-template-columns: 1fr; gap: 18px; }
     .reader-card { padding: 50px 22px 40px; box-shadow: 6px 6px 0 var(--text-dark); }
     .social-icon { width: 60px; height: 60px; box-shadow: 4px 4px 0 var(--text-dark); }
-    .social-icon svg { width: 28px; height: 28px; }
+    .social-icon svg,
+    .social-icon img { width: 28px; height: 28px; }
     .hero-socials { gap: 14px; }
 }
 
